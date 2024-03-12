@@ -1,0 +1,192 @@
+﻿@page
+@model QuestionPool.Pages.question.upload_fileModel
+@{
+}
+<head>
+
+    <!-- plugin css -->
+    <link href="~/assets/libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/libs/quill/quill.core.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/libs/quill/quill.bubble.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/libs/quill/quill.snow.css" rel="stylesheet" type="text/css" />
+
+    <!-- third party css -->
+    <link href="~/assets/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/libs/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/libs/datatables.net-buttons-bs5/css/buttons.bootstrap5.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/libs/datatables.net-select-bs5/css//select.bootstrap5.min.css" rel="stylesheet" type="text/css" />
+    <!-- third party css end -->
+    <!-- Theme Config Js -->
+    <script src="~/assets/js/head.js"></script>
+
+    <!-- Bootstrap css -->
+    <link href="~/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" id="app-style" />
+
+
+</head>
+<body>
+    <div class="content">
+
+        <!-- Start Content-->
+        <div class="container-fluid">
+
+            <!-- start page title -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box">
+                        <div class="page-title-right">
+                            <ol class="breadcrumb m-0">
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">ExamQuestionPool</a></li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Subject</a></li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">View</a></li>
+                            </ol>
+                        </div>
+                        <h4 class="page-title">Subjects</h4>
+                    </div>
+                    <div class="col-xl-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <ul class="nav nav-tabs nav-bordered nav-justified">
+                                    <li class="nav-item">
+                                        <a href="#home-b2" data-bs-toggle="tab" aria-expanded="false" class="nav-link active">
+                                            Upload Question
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#profile-b2" data-bs-toggle="tab" aria-expanded="true" class="nav-link ">
+                                            Question List
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#messages-b2" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
+                                            Answer List
+                                        </a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content">
+                                    <div class="tab-pane" id="home-b2">
+                                        <h3>File Upload </h3>
+                                        <div class="mb-3 mt-3">
+                                            <form id="uploadForm" method="post" enctype="multipart/form-data">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Upload File</label>
+                                                    <input type="file" class="form-control" @*asp-for="Upload"*@ name="pdfFile" />
+                                                </div>
+                                                <div class="mb-3">
+                                                    <input type="submit" class="btn btn-primary" onclick="uploadFileAndSwitchTab()" />
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane active" id="profile-b2">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <table class="table" id="subjectTable">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th data-field="name" data-sortable="true">
+                                                                        No.
+                                                                    </th>
+                                                                    <th data-field="Subjectcode" data-sortable="true">
+                                                                        Text
+                                                                    </th>
+                                                                    <th data-field="date" data-sortable="false" data-formatter="dateFormatter">
+                                                                        Choices
+                                                                    </th>
+                                                                    <th data-field="status" data-sortable="false" data-formatter="statusFormatter">
+                                                                        Images
+                                                                    </th>
+                                                                    <th>Action</th>
+                                                                </tr>
+                                                            </thead>
+                                                            @if (Model.Questions != null && Model.Questions.Any())
+                                                            {
+
+                                                                @* table content *@
+                                                                <tbody>
+                                                                    @foreach (var question in Model.Questions)
+                                                                    {
+                                                                        <tr>
+                                                                            @* actucally is your question number *@
+                                                                            <td>@question.Id</td>
+                                                                            @* questions *@
+                                                                            <td>@question.Questions</td>
+                                                                            <td>
+                                                                                <ul>
+                                                                                    @* will store each choices based on each questions *@
+                                                                                    @foreach (var choice in question.Choice)
+                                                                                    {
+                                                                                        <li>@choice</li>
+                                                                                    }
+                                                                                </ul>
+                                                                            </td>
+                                                                            <td>@question.Image</td>
+                                                                            <td>
+                                                                                <a asp-page="~/question/Edit" asp-route-id="@question.Id" class="btn btn-soft-info waves-effect waves-light"><i class="fe-edit"></i></a>
+                                                                                @*<a asp-page="./Details" asp-route-id="@item.Id">Details</a> |*@
+                                                                                <a asp-page="./Delete" class="btn btn-soft-danger waves-effect waves-light"><i class="fe-x-square"></i></a>
+                                                                            </td>
+                                                                        </tr>
+                                                                    }
+                                                                </tbody>
+
+                                                            }
+                                                        </table>
+                                                    </div> <!-- end card-body-->
+                                                </div> <!-- end card-->
+                                            </div><!-- end col -->
+                                        </div>
+                                        <!-- end row -->
+                                    </div>
+                                    <div class="tab-pane" id="messages-b2">
+                                        <div id="example">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> <!-- end card-->
+                    </div> <!-- end col -->
+                </div>
+                <!-- end row -->
+
+            </div>
+            <!-- end page title -->
+        </div> <!-- container -->
+
+    </div> <!-- content -->
+    <!-- Vendor js -->
+    <script src="~/assets/js/vendor.min.js"></script>
+    <!-- Plugins js -->
+    <script src="~/assets/libs/quill/quill.min.js"></script>
+
+    <!-- Init js-->
+    <script src="~/assets/js/pages/form-quilljs.init.js"></script>
+
+    <!-- Datatables init -->
+    <script src="~/assets/js/pages/datatables.init.js"></script>
+    <script src="~/assets/libs/pdfmake/build/pdfmake.min.js"></script>
+    <script src="~/assets/libs/pdfmake/build/vfs_fonts.js"></script>
+    <!-- third party js ends -->
+    <script src="~/lib/webviewer/webviewer.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Get all list items
+            var menuItems = document.querySelectorAll('#menu li');
+
+            // Attach click event to each list item
+            menuItems.forEach(function (item) {
+                item.addEventListener('click', function () {
+                    // Get the data-page attribute value
+                    var page = this.getAttribute('data-page');
+
+                    // Redirect to the respective page
+                    window.location.href = page + '.html'; // Assuming your pages are named page1.html, page2.html, etc.
+                });
+            });
+        });
+
+    </script>
+
+</body>

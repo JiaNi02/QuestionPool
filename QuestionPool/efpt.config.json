@@ -1,0 +1,73 @@
+﻿{
+   "CodeGenerationMode": 2,
+   "ContextClassName": "QuestionPoolDatabaseContext",
+   "ContextNamespace": null,
+   "DefaultDacpacSchema": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": false,
+   "ModelNamespace": null,
+   "OutputContextPath": null,
+   "OutputPath": "Models",
+   "PreserveCasingWithRegex": true,
+   "ProjectRootNamespace": "QuestionPool",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 0,
+   "SelectedToBeGenerated": 0,
+   "Tables": [
+      {
+         "Name": "[dbo].[Departments]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ExamPaperDetails]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ExamPapers]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ExamType]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Question]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[QuestionAnswer]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Subjects]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Terms]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[UserDetails]",
+         "ObjectType": 0
+      }
+   ],
+   "UiHint": "..\\QuestionPool.Database\\QuestionPool.Database.sqlproj",
+   "UncountableWords": null,
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": false,
+   "UseDateOnlyTimeOnly": false,
+   "UseDbContextSplitting": false,
+   "UseFluentApiOnly": true,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": false,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UseSchemaFolders": false,
+   "UseSpatial": false,
+   "UseT4": false
+}

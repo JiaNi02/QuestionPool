@@ -1,0 +1,265 @@
+﻿@page
+@model QuestionPool.Pages.question.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+<head>
+    <meta charset="utf-8" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="~/assets/images/favicon.ico">
+
+    <!-- Theme Config Js -->
+    <script src="~/assets/js/head.js"></script>
+    <!-- Bootstrap Tables css -->
+    <link href="~/assets/libs/bootstrap-table/bootstrap-table.min.css" rel="stylesheet" type="text/css" />
+
+
+    <!-- Bootstrap css -->
+    <link href="~/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" id="app-style" />
+
+    <!-- App css -->
+    <link href="~/assets/css/app.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- Icons css -->
+    <link href="~/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+</head>
+<div class="content">
+
+    <!-- Start Content-->
+    <div class="container-fluid">
+
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="javascript: void(0);">ExamQuestionPool</a></li>
+                            <li class="breadcrumb-item"><a href="javascript: void(0);">Question List</a></li>
+
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Question List</h4>
+                </div>
+            </div>
+        </div>
+        <!-- end page title -->
+        @* subject start*@
+
+        <p>
+            <a asp-page="Create" class="btn btn-primary">Create New</a>
+        </p>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="dataTable" class="table table-borderless">
+                                <thead class="table-light">
+                                    <tr>
+                                <thead>
+                                    <tr>
+                                        <th>
+                                                    @Html.DisplayNameFor(model => model.Question[0].Name)
+                                        </th>
+                                        <th>
+                                                    @Html.DisplayNameFor(model => model.Question[0].QuestionNumber)
+                                        </th>
+                                        <th>
+                                                    @Html.DisplayNameFor(model => model.Question[0].Questions)
+                                        </th>
+                                        <th>
+                                                    @Html.DisplayNameFor(model => model.Question[0].Choice)
+                                        </th>
+                                        <th>
+                                                    @Html.DisplayNameFor(model => model.Question[0].Mark)
+                                        </th>
+                                        <th>
+                                                    @Html.DisplayNameFor(model => model.Question[0].Year)
+                                        </th>
+                                        <th>
+                                                    @Html.DisplayNameFor(model => model.Question[0].DataAdded)
+                                        </th>
+                                        <th>
+                                                    @Html.DisplayNameFor(model => model.Question[0].IsDeleted)
+                                        </th>
+                                        <th>
+                                                    @Html.DisplayNameFor(model => model.Question[0].Image)
+                                        </th>
+                                        <th>
+                                                    @Html.DisplayNameFor(model => model.Question[0].CreatedByUserDetails)
+                                        </th>
+                                        <th>
+                                                    @Html.DisplayNameFor(model => model.Question[0].ExamType)
+                                        </th>
+                                        <th>
+                                                    @Html.DisplayNameFor(model => model.Question[0].Subject)
+                                        </th>
+                                        <th>
+                                                    @Html.DisplayNameFor(model => model.Question[0].Term)
+                                        </th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                            @foreach (var item in Model.Question)
+                                            {
+                                        <tr>
+                                            <td>
+                                                        @Html.DisplayFor(modelItem => item.Name)
+                                            </td>
+                                            <td>
+                                                        @Html.DisplayFor(modelItem => item.QuestionNumber)
+                                            </td>
+                                            <td>
+                                                        @Html.DisplayFor(modelItem => item.Questions)
+                                            </td>
+                                            <td>
+                                                        @Html.DisplayFor(modelItem => item.Choice)
+                                            </td>
+                                            <td>
+                                                        @Html.DisplayFor(modelItem => item.Mark)
+                                            </td>
+                                            <th>
+                                                        @Html.DisplayNameFor(model => model.Question[0].DataAdded)
+                                            </th>
+                                            <th>
+                                                        @Html.DisplayNameFor(model => model.Question[0].IsDeleted)
+                                            </th>
+                                            <th>
+                                                        @Html.DisplayNameFor(model => model.Question[0].Image)
+                                            </th>
+                                            <th>
+                                                        @Html.DisplayNameFor(model => model.Question[0].CreatedByUserDetails)
+                                            </th>
+                                            <th>
+                                                        @Html.DisplayNameFor(model => model.Question[0].ExamType)
+                                            </th>
+                                            <th>
+                                                        @Html.DisplayNameFor(model => model.Question[0].Subject)
+                                            </th>
+                                            <th>
+                                                        @Html.DisplayNameFor(model => model.Question[0].Term)
+                                            </th>
+                                            <td>
+                                                <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-soft-info waves-effect waves-light"><i class="fe-edit"></i></a>
+                                                        @*<a asp-page="./Details" asp-route-id="@item.Id">Details</a> |*@
+                                                <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-soft-danger waves-effect waves-light"><i class="fe-x-square"></i></a>
+                                            </td>
+                                        </tr>
+                                            }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div> <!-- end card-->
+            </div> <!-- end col-->
+        </div>
+        <!-- end row-->
+    </div> <!-- container -->
+
+</div> <!-- content -->
+<!-- Vendor js -->
+<script src="~/assets/js/vendor.min.js"></script>
+@* <h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Question[0].Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Question[0].QuestionNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Question[0].Questions)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Question[0].Choice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Question[0].Mark)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Question[0].Year)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Question[0].DataAdded)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Question[0].IsDeleted)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Question[0].Image)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Question[0].CreatedByUserDetails)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Question[0].ExamType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Question[0].Subject)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Question[0].Term)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Question) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.QuestionNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Questions)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Choice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Mark)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Year)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DataAdded)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsDeleted)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Image)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedByUserDetails.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ExamType.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Subject.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Term.Id)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table> *@

@@ -1,0 +1,101 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-nZwA3Qf6Hzmo9HrAv0LZqUv7HGXFIE3YM5aMb4j8+0tZaAJyY7p+f9/yLZvjw3W01uLb8xssDh6ug5RiOzq1Ew==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<style>
+    /* 自定义下拉菜单样式 */
+    .dropdown-menu {
+        background-color: #fff; /* 背景色 */
+        border: 1px solid rgba(0, 0, 0, 0.15); /* 边框 */
+        border-radius: 0.25rem; /* 圆角 */
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15); /* 阴影 */
+    }
+
+    /* 为下拉菜单项添加鼠标悬停效果 */
+    .dropdown-item:hover {
+        background-color: rgba(0, 0, 0, 0.075); /* 悬停时的背景色 */
+    }
+
+    /* 为图标和文字之间添加一些间距 */
+    .dropdown-item i {
+        margin-right: 0.5rem;
+    }
+
+    .text-light {
+        color: #ffffff; /* 亮色文本的颜色值 */
+    }
+</style>
+<ul class="navbar-nav">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <li class="nav-item dropdown">
+            <a id="userDropdown" class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-user-circle me-2"></i>Hello, @UserManager.GetUserName(User)!
+            </a>
+            <div class="dropdown-menu" aria-labelledby="userDropdown">
+                <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
+                    <i class="fas fa-user-cog me-2"></i>Manage Account
+                </a>
+                <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })">
+                    <button id="logout" type="submit" class="dropdown-item">
+                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                    </button>
+                </form>
+            </div>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link text-light" id="register" asp-area="Identity" asp-page="/Account/Register">
+                <i class="fas fa-user-plus me-2"></i>Register
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-light" id="login" asp-area="Identity" asp-page="/Account/Login">
+                <i class="fas fa-sign-in-alt me-2"></i>Login
+            </a>
+        </li>
+    }
+</ul>
+<script>
+    // 使用 Bootstrap 的 JavaScript 功能来初始化下拉菜单
+    document.addEventListener('DOMContentLoaded', function () {
+        var dropdownMenu = document.querySelectorAll('.dropdown-toggle');
+        dropdownMenu.forEach(function (dropdown) {
+            dropdown.addEventListener('click', function () {
+                var target = this.getAttribute('aria-expanded');
+                if (target === 'true') {
+                    this.setAttribute('aria-expanded', 'false');
+                } else {
+                    this.setAttribute('aria-expanded', 'true');
+                }
+            });
+        });
+    });
+</script>
+@* <ul class="navbar-nav">
+@if (SignInManager.IsSignedIn(User))
+{
+    <li class="nav-item">
+        <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
+    </li>
+    <li class="nav-item">
+        <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })">
+            <button id="logout" type="submit" class="nav-link btn btn-link text-dark border-0">Logout</button>
+        </form>
+    </li>
+}
+else
+{
+    <li class="nav-item">
+        <a class="nav-link text-dark" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
+    </li>
+}
+</ul>
+ *@

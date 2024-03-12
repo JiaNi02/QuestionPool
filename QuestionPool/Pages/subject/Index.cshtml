@@ -1,0 +1,192 @@
+﻿@page
+@model QuestionPool.Pages.subject.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+<head>
+    <meta charset="utf-8" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="~/assets/images/favicon.ico">
+
+    <!-- Theme Config Js -->
+    <script src="~/assets/js/head.js"></script>
+    <!-- Bootstrap Tables css -->
+    <link href="~/assets/libs/bootstrap-table/bootstrap-table.min.css" rel="stylesheet" type="text/css" />
+
+
+    <!-- Bootstrap css -->
+    <link href="~/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" id="app-style" />
+
+    <!-- App css -->
+    <link href="~/assets/css/app.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- Icons css -->
+    <link href="~/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div class="content">
+        <!-- Start Content-->
+        <div class="container-fluid">
+
+            <!-- start page title -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box">
+                        <div class="page-title-right">
+                            <ol class="breadcrumb m-0">
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">ExamQuestionPool</a></li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Subject</a></li>
+
+                            </ol>
+                        </div>
+                        <h4 class="page-title">Subjects</h4>
+                    </div>
+                </div>
+            </div>
+            <!-- end page title -->
+            <div class="mb-3">
+                <a asp-page="Create" class="btn btn-success">Create New</a>
+                <!-- Enhanced Export to PDF Button -->
+                @*                <form method="post" asp-page-handler="ExportToPdf" class="d-inline">
+                <button type="submit" class="btn btn-info ml-2">Export to PDF <i class="fas fa-file-pdf"></i></button>
+                </form>*@
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <table data-toggle="table" data-sort-name="id" data-page-list="[5, 10, 20]" data-page-size="5"
+                                   data-buttons-class="xs btn-light" data-pagination="true" data-show-pagination-switch="true"
+                                   class="table-borderless ">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th data-field="name" data-sortable="true">
+                                            @Html.DisplayNameFor(model => model.Subjects[0].Name)
+                                        </th>
+                                        <th data-field="subjectCode" data-sortable="true">
+                                            @Html.DisplayNameFor(model => model.Subjects[0].SubjectCode)
+                                        </th>
+                                        <th th data-field="date" data-sortable="false" data-formatter="dateFormatter">
+                                            @Html.DisplayNameFor(model => model.Subjects[0].DateCreated)
+                                        </th>
+                                        <th data-field="status" data-sortable="false" data-formatter="statusFormatter">
+                                            @Html.DisplayNameFor(model => model.Subjects[0].Status)
+                                        </th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.Subjects)
+                                    {
+                                        <tr>
+                                            <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.SubjectCode)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.DateCreated)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.Status)</td>
+                                            <td>
+                                                <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-secondary">Edit</a>
+                                                <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-danger waves-effect waves-light">Delete</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div> <!-- end card-->
+                </div> <!-- end col-->
+            </div>
+            <!-- end row-->
+        </div> <!-- container -->
+    </div> <!-- content -->
+    <!-- Vendor js -->
+    <script src="~/assets/js/vendor.min.js"></script>
+
+
+    <!-- Bootstrap Tables js -->
+    <script src="~/assets/libs/bootstrap-table/bootstrap-table.min.js"></script>
+
+    <!-- Init js -->
+    <script src="~/assets/js/pages/bootstrap-tables.init.js"></script>
+
+</body>
+<script>
+    function statusFormatter(value, row, index) {
+        // Define the colors based on status values
+        var colors = {
+            'Active': 'text-success',
+            'Inactive': 'text-danger'
+        };
+
+        // Apply the color class based on the status
+        var colorClass = colors[value] || '';
+
+        return '<span class="' + colorClass + '">' + value + '</span>';
+    }
+
+    // You can define the dateFormatter function similarly if needed
+</script>
+@section scripts {
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" />
+
+    <script>
+        $(document).ready(function () {
+            // Initialize DataTable
+            $('#dataTable').DataTable(
+                {
+                    searching: false,
+                });
+        });
+
+    </script>
+}
+@* <h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Subjects[0].Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Subjects[0].SubjectCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Subjects[0].DateCreated)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Subjects[0].Status)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Subjects) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SubjectCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateCreated)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table> *@

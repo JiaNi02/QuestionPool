@@ -1,0 +1,48 @@
+﻿@page
+@model QuestionPool.Pages.webviewerModel
+@{
+
+}
+
+<div class="text-center">
+    <input type="file" id="fileInput" accept=".pdf"> <!-- 这里设置了 accept=".pdf" 限制只允许上传 PDF 文件 -->
+    <button id="uploadButton">Upload File</button>
+    <div id='viewer' style='width: 1024px; height: 600px; margin: 0 auto;'></div>
+</div>
+
+<script>
+    // document.addEventListener('DOMContentLoaded',() =>{
+    //     const viewerElement = document.getElementById('viewer');
+    //     WebViewer({
+    //         path: 'lib/webviewer',
+    //         initialDoc: 'https://pdftron.s3.amazonaws.com/downloads/pl/demo-annotated.pdf'
+    //     }, viewerElement).then(instance => {
+    //         instance.UI.enableFeatures([instance.UI.Feature.ContentEdit]);
+    //     });
+    // });
+    document.addEventListener('DOMContentLoaded', () => {
+        const viewerElement = document.getElementById('viewer');
+        const uploadButton = document.getElementById('uploadButton');
+        const fileInput = document.getElementById('fileInput');
+
+        function uploadFile(file) {
+            const config = {
+                path: 'lib/webviewer',
+                initialDoc: file
+            };
+
+            WebViewer(config, viewerElement).then(instance => {
+                instance.UI.enableFeatures([instance.UI.Feature.ContentEdit]);
+            }).catch(error => {
+                console.error('Error loading document:', error);
+            });
+        }
+
+        // 点击按钮时触发文件上传
+        uploadButton.addEventListener('click', () => {
+            const file = fileInput.files[0];
+            const fileURL = URL.createObjectURL(file);
+            uploadFile(fileURL);
+        });
+    });
+</script>

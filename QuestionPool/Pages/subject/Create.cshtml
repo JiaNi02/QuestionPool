@@ -1,0 +1,148 @@
+﻿@page
+@model QuestionPool.Pages.subject.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+<head>
+    <meta charset="utf-8" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="~/assets/images/favicon.ico">
+
+    <!-- Theme Config Js -->
+    <script src="~/assets/js/head.js"></script>
+    <!-- Bootstrap Tables css -->
+    <link href="~/assets/libs/bootstrap-table/bootstrap-table.min.css" rel="stylesheet" type="text/css" />
+
+
+    <!-- Bootstrap css -->
+    <link href="~/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" id="app-style" />
+
+    <!-- App css -->
+    <link href="~/assets/css/app.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- Icons css -->
+    <link href="~/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+</head>
+<div class="content">
+
+    <!-- Start Content-->
+    <div class="container-fluid">
+
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="javascript: void(0);">ExamQuestionPool</a></li>
+                            <li class="breadcrumb-item"><a href="javascript: void(0);">Subject</a></li>
+                            <li class="breadcrumb-item"><a href="javascript: void(0);">Create</a></li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Subjects</h4>
+                </div>
+            </div>
+        </div>
+        <!-- end page title -->
+        @* Create start*@
+        <h4><b>Create New Subject</b></h4>
+        <hr />
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="card">
+                    <div class="card-body">
+
+                        <form method="post">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="mb-3">
+                                <label asp-for="Subjects.Name" class="form-label"></label>
+                                <input asp-for="Subjects.Name" class="form-control mb-3" />
+                                <span asp-validation-for="Subjects.Name" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Subjects.SubjectCode" class="form-label"></label>
+                                <input asp-for="Subjects.SubjectCode" class="form-control" />
+                                <span asp-validation-for="Subjects.SubjectCode" class="text-danger"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="Subjects.DateCreated" class="form-label"></label>
+                                <input asp-for="Subjects.DateCreated" class="form-control" />
+                                <span asp-validation-for="Subjects.DateCreated" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Subjects.Status">Status</label>
+                                <select asp-for="Subjects.Status" class="form-control mb-3">
+                                    <option value="Active">Active</option>
+                                    <option value="Inactive">Inactive</option>
+                                </select>
+                                <span asp-validation-for="Subjects.Status" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn w-sm btn-success waves-effect" style="margin-right:15px">Create</button>
+                                <a asp-action="Index" class="btn btn-blue waves-effect waves-light">Back to List</a>
+                            </div>
+
+                        </form>
+
+                    </div> <!-- end card-body -->
+                </div> <!-- end card -->
+            </div> <!-- end col -->
+        </div>
+
+        @section Scripts {
+            @{
+                await Html.RenderPartialAsync("_ValidationScriptsPartial");
+            }
+        }
+
+
+    </div> <!-- container -->
+
+</div> <!-- content -->
+<!-- Vendor js -->
+<script src="~/assets/js/vendor.min.js"></script>
+@* <h1>Create</h1>
+
+<h4>Subjects</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Subjects.Name" class="control-label"></label>
+                <input asp-for="Subjects.Name" class="form-control" />
+                <span asp-validation-for="Subjects.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Subjects.SubjectCode" class="control-label"></label>
+                <input asp-for="Subjects.SubjectCode" class="form-control" />
+                <span asp-validation-for="Subjects.SubjectCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Subjects.DateCreated" class="control-label"></label>
+                <input asp-for="Subjects.DateCreated" class="form-control" />
+                <span asp-validation-for="Subjects.DateCreated" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Subjects.Status" class="control-label"></label>
+                <input asp-for="Subjects.Status" class="form-control" />
+                <span asp-validation-for="Subjects.Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+} *@

@@ -1,0 +1,95 @@
+﻿@page
+@model QuestionPool.Pages.question.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Question</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Question.Id" />
+            <div class="form-group">
+                <label asp-for="Question.Name" class="control-label"></label>
+                <input asp-for="Question.Name" class="form-control" />
+                <span asp-validation-for="Question.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Question.QuestionNumber" class="control-label"></label>
+                <input asp-for="Question.QuestionNumber" class="form-control" />
+                <span asp-validation-for="Question.QuestionNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Question.Questions" class="control-label"></label>
+                <input asp-for="Question.Questions" class="form-control" />
+                <span asp-validation-for="Question.Questions" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Question.Choice" class="control-label"></label>
+                <input asp-for="Question.Choice" class="form-control" />
+                <span asp-validation-for="Question.Choice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Question.Mark" class="control-label"></label>
+                <input asp-for="Question.Mark" class="form-control" />
+                <span asp-validation-for="Question.Mark" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Question.SubjectId" class="control-label"></label>
+                <select asp-for="Question.SubjectId" class="form-control" asp-items="ViewBag.SubjectId"></select>
+                <span asp-validation-for="Question.SubjectId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Question.ExamTypeId" class="control-label"></label>
+                <select asp-for="Question.ExamTypeId" class="form-control" asp-items="ViewBag.ExamTypeId"></select>
+                <span asp-validation-for="Question.ExamTypeId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Question.Year" class="control-label"></label>
+                <input asp-for="Question.Year" class="form-control" />
+                <span asp-validation-for="Question.Year" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Question.TermId" class="control-label"></label>
+                <select asp-for="Question.TermId" class="form-control" asp-items="ViewBag.TermId"></select>
+                <span asp-validation-for="Question.TermId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Question.CreatedByUserDetailsId" class="control-label"></label>
+                <select asp-for="Question.CreatedByUserDetailsId" class="form-control" asp-items="ViewBag.CreatedByUserDetailsId"></select>
+                <span asp-validation-for="Question.CreatedByUserDetailsId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Question.DataAdded" class="control-label"></label>
+                <input asp-for="Question.DataAdded" class="form-control" />
+                <span asp-validation-for="Question.DataAdded" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Question.IsDeleted" class="control-label"></label>
+                <input asp-for="Question.IsDeleted" class="form-control" />
+                <span asp-validation-for="Question.IsDeleted" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Question.Image" class="control-label"></label>
+                <input asp-for="Question.Image" class="form-control" />
+                <span asp-validation-for="Question.Image" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -11,6 +11,7 @@
     <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
     <meta content="Coderthemes" name="author" />
 
+    <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
     <!-- App favicon -->
     <link rel="shortcut icon" href="~/asset/images/favicon.ico">
 
@@ -33,6 +34,8 @@
     <link href="~/assets/libs/dropzone/min/dropzone.min.css" rel="stylesheet" type="text/css" />
     <link href="~/assets/libs/quill/quill.core.css" rel="stylesheet" type="text/css" />
     <link href="~/assets/libs/quill/quill.snow.css" rel="stylesheet" type="text/css" />
+    @* <script src="https://cdn.tiny.cloud/1/i0wlzeqbdu2uistzjyp12246lo9qdf1x4uhmy31eh4mrqb8i/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script> *@
+    @* <script src="~/js/site.js" asp-append-version="true"></script> *@
 </head>
 <body>
     <div class="content">
@@ -56,93 +59,67 @@
                 </div>
             </div>
             <!-- end page title -->
+            <form method="post">
             <div class="card">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-lg-6">
                             <!-- Content for the left side -->
+                           
                             <div class="mb-3">
                                 <label asp-for="Question.Name" class="form-label">Question Description</label>
                                 <input asp-for="Question.Name" class="form-control" />
                                 <span asp-validation-for="Question.Name" class="text-danger"></span>
                             </div>
                             <div class="mb-3">
-                                <label asp-for="Question.QuestionNumber" class="form-label"></label>
-                                <input asp-for="Question.QuestionNumber" class="form-control" />
-                                <span asp-validation-for="Question.QuestionNumber" class="text-danger"></span>
-                            </div>
-                            <div class="mb-3">
                                 <label asp-for="Question.Questions" class="form-label"></label>
+                                 <input asp-for="Question.Questions" class="form-control" />
                                 <span asp-validation-for="Question.Questions" class="text-danger"></span>
-                                <div id="snow-editor" style="height: 250px;"></div> <!-- end Snow-editor-->
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="Question.Choice" class="control-label"></label>
-                                <input asp-for="Question.Choice" class="form-control" />
-                                <span asp-validation-for="Question.Choice" class="text-danger"></span>
-                            </div>
+
+                            </div>                               
                             <div class="mb-3">
                                 <label asp-for="Question.Mark" class="form-label"></label>
                                 <input asp-for="Question.Mark" class="form-control" />
                                 <span asp-validation-for="Question.Mark" class="text-danger"></span>
                             </div>
-                            <div class="mb-3">
-                                <label asp-for="Question.Year" class="form-label"></label>
-                                <input asp-for="Question.Year" class="form-control" id="example-month" type="month" name="month" />
-                                <span asp-validation-for="Question.Year" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="Question.DataAdded" class="form-label"></label>
-                                <input asp-for="Question.DataAdded" class="form-control" />
-                                <span asp-validation-for="Question.DataAdded" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="Question.IsDeleted" class="control-label"></label>
-                                <select asp-for="Question.IsDeleted" class="form-control">
-                                    <option value="true">True</option>
-                                    <option value="false">False</option>
-                                </select>
-                                <span asp-validation-for="Question.IsDeleted" class="text-danger"></span>
-                            </div>
+                                <div class="mb-3">
+                                    <label for="example-fileinput" class="form-label">Upload File</label>
+                                    <input asp-for="Question.Image" class="form-control" type="file" accept="image/*" name="image" id="file" onchange="loadFile(event)">
+                                    <span asp-validation-for="Question.Image" class="text-danger"></span>
+                                    <p><img id="output" width="150" /></p>
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="Question.ExamTypeId" class="control-label"></label>
+                                    <select asp-for="Question.ExamTypeId" class="form-control" asp-items="ViewBag.ExamTypeId"></select>
+                                </div>
 
                         </div>
 
                         <div class="col-lg-6">
                             <!-- Content for the right side  -->
                             <div class="mb-3">
-                                <label for="example-fileinput" class="form-label">Upload File</label>
-                                <input asp-for="Question.Image" class="form-control" type="file" accept="image/*" name="image" id="file" onchange="loadFile(event)">
-                                <span asp-validation-for="Question.Image" class="text-danger"></span>
-                                <p><img id="output" width="150" /></p>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="Question.CreatedByUserDetailsId" class="control-label"></label>
-                                <select asp-for="Question.CreatedByUserDetailsId" class="form-control" asp-items="ViewBag.CreatedByUserDetailsId"></select>
-                            </div>
-                            <div class="mb-3">
-                                <label asp-for="Question.ExamTypeId" class="form-label">Exam Type</label>
-                                <select asp-for="Question.ExamTypeId" class="form-control" asp-items="ViewBag.ExamTypeId"></select>
-                            </div>
-                            <div class="mb-3">
                                 <label asp-for="Question.SubjectId" class="control-label">Subject</label>
                                 <select asp-for="Question.SubjectId" class="form-control" asp-items="ViewBag.SubjectId"></select>
                             </div>
                             <div class="mb-3">
-                                <label asp-for="Question.TermId" class="form-label">Term</label>
+                                    <label asp-for="Question.TermId" class="control-label">Term</label>
                                 <select asp-for="Question.TermId" class="form-control" asp-items="ViewBag.TermId"></select>
                             </div>
-                            @*                        <form action="/upload" method="post" class="dropzone" id="myAwesomeDropzone" data-plugin="dropzone" data-previews-container="#file-previews"
-                            data-upload-preview-template="#uploadPreviewTemplate">
-                            <div class="fallback">
-                            <input name="file" type="file" multiple />
-                            </div>
-                            <div class="dz-message needsclick">
-                            <i class="h1 text-muted dripicons-cloud-upload"></i>
-                            <h3>Drop files here or click to upload.</h3>
-                            </div>
-                            </form>*@
-                            <!-- Preview -->
-                            <div class="dropzone-previews mt-3" id="file-previews"></div>
+                                <div id="choiceContainer">
+                                    <div class="mb-3" id="choiceFieldGroup" style="display: none;">
+                                        <label asp-for="Question.Choice" class="control-label">Choices</label>
+                                        <input asp-for="Question.Choice" class="form-control" />
+                                        <span asp-validation-for="Question.Choice" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div id="dropdownSection" class="mb-3">
+                                    <select id="dropdownChoice" class="form-control">
+                                        <option value="">Please select an option</option>
+                                        <option value="show">Show Choice Field</option>
+                                        <option value="hide">Hide Choice Field</option>
+                                    </select>
+                                </div>
+                                <button type="button" id="addChoice" class="btn btn-primary">Add Choice</button>
                         </div>
                     </div>
                 </div>
@@ -152,50 +129,72 @@
             <div class="row">
                 <div class="col-12">
                     <div class="text-center mb-3">
-                        <input type="submit" class="btn w-sm btn-success waves-effect" value="Create" />
+                        <button type="submit"  class="btn btn-primary">Create</button>
                         <a asp-page="Index" class="btn btn-blue waves-effect waves-light">Back to List</a>
+                        <a href="~/answer/Create" class="btn btn-info waves-effect waves-light">Create Answer</a>
                     </div>
                 </div> <!-- end col -->
             </div>
-            <!-- end row -->
-            <!-- file preview template -->
-            <div class="d-none" id="uploadPreviewTemplate">
-                <div class="card mt-1 mb-0 shadow-none border">
-                    <div class="p-2">
-                        <div class="row align-items-center">
-                            <div class="col-auto">
-                                <img data-dz-thumbnail src="#" class="avatar-sm rounded bg-light" alt="">
-                            </div>
-                            <div class="col ps-0">
-                                <a href="javascript:void(0);" class="text-muted fw-bold" data-dz-name></a>
-                                <p class="mb-0" data-dz-size></p>
-                            </div>
-                            <div class="col-auto">
-                                <!-- Button -->
-                                <a href="" class="btn btn-link btn-lg text-muted" data-dz-remove>
-                                    <i class="dripicons-cross"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            </form>
+
+            <!-- end row -->          
         </div> <!-- container -->
         <script>
             var loadFile = function (event) {
                 var image = document.getElementById('output');
                 image.src = URL.createObjectURL(event.target.files[0]);
             };
+            document.addEventListener("DOMContentLoaded", function () {
+                var addButton = document.getElementById("addChoice");
+                var container = document.getElementById("choiceContainer");
+                var index = 2;
+                var maxChoices = 4;// 初始选择索引
+
+                addButton.addEventListener("click", function () {
+                    var newDiv = document.createElement("div");
+                    newDiv.className = "mb-3";
+                    newDiv.innerHTML = `
+                                            <label class="control-label">Choice ${index}:</label>
+                                            <input type="text" class="form-control" name="Choice${index}" />
+                                            <span class="text-danger"></span>
+                                        `;
+                    container.appendChild(newDiv);
+                    index++;
+                });
+            });
         </script>
+
         @section Scripts {
             @{
                 await Html.RenderPartialAsync("_ValidationScriptsPartial");
             }
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    // Get the select element for dropdown choice
+                    var dropdownChoice = document.getElementById("dropdownChoice");
+                    // Get the choice field group
+                    var choiceFieldGroup = document.getElementById("choiceFieldGroup");
+
+                    // Event listener for change event on dropdown choice
+                    dropdownChoice.addEventListener("change", function () {
+                        // Get the selected value
+                        var selectedOption = this.value;
+
+                        // Conditionally display or hide the choice field group
+                        if (selectedOption === "show") {
+                            // Show the choice field group
+                            choiceFieldGroup.style.display = "block";
+                        } else {
+                            // Hide the choice field group
+                            choiceFieldGroup.style.display = "none";
+                        }
+                    });
+                });
+            </script>
         }
     </div> <!-- content -->
     <!-- Vendor js -->
     <script src="~/assets/js/vendor.min.js"></script>
-
 
     <!-- Select2 js-->
     <script src="~/assets/libs/select2/js/select2.min.js"></script>

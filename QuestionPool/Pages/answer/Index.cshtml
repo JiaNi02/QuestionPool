@@ -1,0 +1,66 @@
+﻿@page
+@model QuestionPool.Pages.answer.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.QuestionAnswer[0].Answer)
+            </th>
+@*             <th>
+                @Html.DisplayNameFor(model => model.QuestionAnswer[0].Choice)
+            </th> *@
+            <th>
+                @Html.DisplayNameFor(model => model.QuestionAnswer[0].Order)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.QuestionAnswer[0].Image)
+            </th>
+@*             <th>
+                @Html.DisplayNameFor(model => model.QuestionAnswer[0].IsTheAnswer)
+            </th> *@
+            <th>
+                @Html.DisplayNameFor(model => model.QuestionAnswer[0].Question)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.QuestionAnswer) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Answer)
+            </td>
+@*             <td>
+                @Html.DisplayFor(modelItem => item.Choice)
+            </td> *@
+            <td>
+                @Html.DisplayFor(modelItem => item.Order)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Image)
+            </td>
+@*             <td>
+                @Html.DisplayFor(modelItem => item.IsTheAnswer)
+            </td> *@
+            <td>
+                @Html.DisplayFor(modelItem => item.Question.Questions)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

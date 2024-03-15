@@ -1,0 +1,194 @@
+﻿@page
+@model QuestionPool.Pages.answer.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+<body>
+    <div class="content">
+
+        <!-- Start Content-->
+        <div class="container-fluid">
+
+            <!-- start page title -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box">
+                        <div class="page-title-right">
+                            <ol class="breadcrumb m-0">
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">ExamQuestionPool</a></li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Question Bank</a></li>
+                                <li class="breadcrumb-item active">Create Answer</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end page title -->
+            <form method="post">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <!-- Content for the left side -->
+
+                                <div class="mb-3">
+                                    <label asp-for="QuestionAnswer.Answer" class="control-label"></label>
+                                    <input asp-for="QuestionAnswer.Answer" class="form-control" type="text" />
+                                    <span asp-validation-for="QuestionAnswer.Answer" class="text-danger"></span>
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="QuestionAnswer.QuestionId" class="control-label"></label>
+                                    <select asp-for="QuestionAnswer.QuestionId" class="form-control" asp-items="ViewBag.QuestionId"></select>
+                                </div>
+@*                                 <div id="choiceContainer">
+                                    <div class="mb-3">
+                                        <label asp-for="QuestionAnswer.Choice" class="control-label">Choice</label>
+                                        <input asp-for="QuestionAnswer.Choice" class="form-control" name="Choice1" />
+                                        <span asp-validation-for="QuestionAnswer.Choice" class="text-danger"></span>
+                                    </div>                                    
+                                </div>
+                                <button type="button" id="addChoice" class="btn btn-primary">Add Choice</button> *@
+                                
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label asp-for="QuestionAnswer.Order" class="control-label"></label>
+                                    <input asp-for="QuestionAnswer.Order" class="form-control" />
+                                    <span asp-validation-for="QuestionAnswer.Order" class="text-danger"></span>
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="QuestionAnswer.Image" class="control-label"></label>
+                                    <input asp-for="QuestionAnswer.Image" class="form-control" />
+                                    <span asp-validation-for="QuestionAnswer.Image" class="text-danger"></span>
+                                </div>
+@*                                 <div class="mb-3">
+                                    <label asp-for="QuestionAnswer.IsTheAnswer" class="control-label"></label>
+                                    <input asp-for="QuestionAnswer.IsTheAnswer" class="form-control" />
+                                    <span asp-validation-for="QuestionAnswer.IsTheAnswer" class="text-danger"></span>
+                                </div> *@
+                                <div class="form-group">
+                                    <input type="submit" value="Create" class="btn btn-primary" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end row -->
+            </form>
+
+            <!-- end row -->
+        </div> <!-- container -->
+        <script>
+            var loadFile = function (event) {
+                var image = document.getElementById('output');
+                image.src = URL.createObjectURL(event.target.files[0]);
+            };
+
+                document.addEventListener("DOMContentLoaded", function () {
+                    var addButton = document.getElementById("addChoice");
+                    var container = document.getElementById("choiceContainer");
+                    var index = 2; // 初始选择索引
+
+                    addButton.addEventListener("click", function () {
+                        var newDiv = document.createElement("div");
+                        newDiv.className = "mb-3";
+                        newDiv.innerHTML = `
+                                <label class="control-label">Choice ${index}:</label>
+                                <input type="text" class="form-control" name="Choice${index}" />
+                                <span class="text-danger"></span>
+                            `;
+                        container.appendChild(newDiv);
+                        index++;
+                    });
+                });
+                
+            </script>
+       
+    </div> <!-- content -->
+    <!-- Vendor js -->
+    <script src="~/assets/js/vendor.min.js"></script>
+
+    <!-- Dropzone file uploads-->
+    <script src="~/assets/libs/dropzone/min/dropzone.min.js"></script>
+
+    <!-- Quill js -->
+    <script src="~/assets/libs/quill/quill.min.js"></script>
+
+    <!-- Init js-->
+    <script src="~/assets/js/pages/form-fileuploads.init.js"></script>
+
+
+</body>
+        @section Scripts {
+            @{
+                await Html.RenderPartialAsync("_ValidationScriptsPartial");
+            }
+}
+@* <h1>Create</h1>
+
+<h4>QuestionAnswer</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="QuestionAnswer.Answer" class="control-label"></label>
+                <input asp-for="QuestionAnswer.Answer" class="form-control" type="text"/>
+                <span asp-validation-for="QuestionAnswer.Answer" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="QuestionAnswer.QuestionId" class="control-label"></label>
+                <select asp-for="QuestionAnswer.QuestionId" class ="form-control" asp-items="ViewBag.QuestionId"></select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Choice 1:</label>
+                <input asp-for="QuestionAnswer.Choice" class="form-control" name="Choice1" />
+                <span asp-validation-for="QuestionAnswer.Choice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Choice 2:</label>
+                <input asp-for="QuestionAnswer.Choice" class="form-control" name="Choice2" />
+                <span asp-validation-for="QuestionAnswer.Choice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Choice 3:</label>
+                <input asp-for="QuestionAnswer.Choice" class="form-control" name="Choice3" />
+                <span asp-validation-for="QuestionAnswer.Choice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Choice 4:</label>
+                <input asp-for="QuestionAnswer.Choice" class="form-control" name="Choice4" />
+                <span asp-validation-for="QuestionAnswer.Choice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="QuestionAnswer.Order" class="control-label"></label>
+                <input asp-for="QuestionAnswer.Order" class="form-control" />
+                <span asp-validation-for="QuestionAnswer.Order" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="QuestionAnswer.Image" class="control-label"></label>
+                <input asp-for="QuestionAnswer.Image" class="form-control" />
+                <span asp-validation-for="QuestionAnswer.Image" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="QuestionAnswer.IsTheAnswer" class="control-label"></label>
+                <input asp-for="QuestionAnswer.IsTheAnswer" class="form-control" />
+                <span asp-validation-for="QuestionAnswer.IsTheAnswer" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+} *@

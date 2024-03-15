@@ -34,5 +34,8 @@ namespace QuestionPool.Models
         public virtual Terms Term { get; set; }
         public virtual ICollection<ExamPaperDetails> ExamPaperDetails { get; set; }
         public virtual ICollection<QuestionAnswer> QuestionAnswer { get; set; }
+
+
     }
+   
 }

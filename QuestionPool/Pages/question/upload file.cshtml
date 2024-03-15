@@ -37,8 +37,7 @@
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="javascript: void(0);">ExamQuestionPool</a></li>
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">Subject</a></li>
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">View</a></li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Upload Question</a></li>
                             </ol>
                         </div>
                         <h4 class="page-title">Subjects</h4>
@@ -48,18 +47,13 @@
                             <div class="card-body">
                                 <ul class="nav nav-tabs nav-bordered nav-justified">
                                     <li class="nav-item">
-                                        <a href="#home-b2" data-bs-toggle="tab" aria-expanded="false" class="nav-link active">
+                                        <a href="#home-b2" data-bs-toggle="tab" aria-expanded="false" class="nav-link ">
                                             Upload Question
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="#profile-b2" data-bs-toggle="tab" aria-expanded="true" class="nav-link ">
+                                        <a href="#profile-b2" data-bs-toggle="tab" aria-expanded="false" class="nav-link active ">
                                             Question List
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="#messages-b2" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
-                                            Answer List
                                         </a>
                                     </li>
                                 </ul>
@@ -79,71 +73,30 @@
                                         </div>
                                     </div>
                                     <div class="tab-pane active" id="profile-b2">
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <div class="card">
-                                                    <div class="card-body">
-                                                        <table class="table" id="subjectTable">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th data-field="name" data-sortable="true">
-                                                                        No.
-                                                                    </th>
-                                                                    <th data-field="Subjectcode" data-sortable="true">
-                                                                        Text
-                                                                    </th>
-                                                                    <th data-field="date" data-sortable="false" data-formatter="dateFormatter">
-                                                                        Choices
-                                                                    </th>
-                                                                    <th data-field="status" data-sortable="false" data-formatter="statusFormatter">
-                                                                        Images
-                                                                    </th>
-                                                                    <th>Action</th>
-                                                                </tr>
-                                                            </thead>
-                                                            @if (Model.Questions != null && Model.Questions.Any())
-                                                            {
+                                        <div class="col-12">
 
-                                                                @* table content *@
-                                                                <tbody>
-                                                                    @foreach (var question in Model.Questions)
-                                                                    {
-                                                                        <tr>
-                                                                            @* actucally is your question number *@
-                                                                            <td>@question.Id</td>
-                                                                            @* questions *@
-                                                                            <td>@question.Questions</td>
-                                                                            <td>
-                                                                                <ul>
-                                                                                    @* will store each choices based on each questions *@
-                                                                                    @foreach (var choice in question.Choice)
-                                                                                    {
-                                                                                        <li>@choice</li>
-                                                                                    }
-                                                                                </ul>
-                                                                            </td>
-                                                                            <td>@question.Image</td>
-                                                                            <td>
-                                                                                <a asp-page="~/question/Edit" asp-route-id="@question.Id" class="btn btn-soft-info waves-effect waves-light"><i class="fe-edit"></i></a>
-                                                                                @*<a asp-page="./Details" asp-route-id="@item.Id">Details</a> |*@
-                                                                                <a asp-page="./Delete" class="btn btn-soft-danger waves-effect waves-light"><i class="fe-x-square"></i></a>
-                                                                            </td>
-                                                                        </tr>
-                                                                    }
-                                                                </tbody>
+                                                    <div id="snow-editor" style="height: 400px;">
+                                                @if (Model.Questions != null && Model.Questions.Any())
+                                                {
 
-                                                            }
-                                                        </table>
-                                                    </div> <!-- end card-body-->
-                                                </div> <!-- end card-->
-                                            </div><!-- end col -->
-                                        </div>
-                                        <!-- end row -->
-                                    </div>
-                                    <div class="tab-pane" id="messages-b2">
-                                        <div id="example">
-                                        </div>
-                                    </div>
+                                                    @foreach (var question in Model.Questions)
+                                                    {
+                                                        <div>
+                                                            <p>Question @question.Id: @question.Questions</p>
+                                                            <p>Choices:</p>
+                                                            <ul>
+                                                                @foreach (var choice in question.Choice)
+                                                                {
+                                                                    <li>@choice</li>
+                                                                }
+                                                            </ul>
+                                                        </div>
+                                                    }
+                                                }
+                                                    </div> <!-- end Snow-editor-->
+                                        </div><!-- end col -->
+
+                                </div>
                                 </div>
                             </div>
                         </div> <!-- end card-->
@@ -186,7 +139,7 @@
                 });
             });
         });
-
+       
     </script>
 
 </body>

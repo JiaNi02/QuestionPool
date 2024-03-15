@@ -68,6 +68,7 @@ namespace QuestionPool.Models
 
                 entity.Property(e => e.Year).HasColumnType("date");
 
+
                 entity.HasOne(d => d.CreatedByUserDetails)
                     .WithMany(p => p.Question)
                     .HasForeignKey(d => d.CreatedByUserDetailsId)
@@ -87,6 +88,7 @@ namespace QuestionPool.Models
                     .WithMany(p => p.Question)
                     .HasForeignKey(d => d.TermId)
                     .HasConstraintName("FK_Question_ToTerms");
+
             });
 
             modelBuilder.Entity<QuestionAnswer>(entity =>

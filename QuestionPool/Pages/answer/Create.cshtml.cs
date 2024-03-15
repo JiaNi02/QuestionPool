@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using QuestionPool.Models;
 
-namespace QuestionPool.Pages.user
+namespace QuestionPool.Pages.answer
 {
     public class CreateModel : PageModel
     {
@@ -20,26 +20,27 @@ namespace QuestionPool.Pages.user
 
         public IActionResult OnGet()
         {
-        ViewData["DepartmentId"] = new SelectList(_context.Departments, "Id", "Name");
+        ViewData["QuestionId"] = new SelectList(_context.Question, "Id", "Name");
             return Page();
         }
 
         [BindProperty]
-        public UserDetails UserDetails { get; set; } = default!;
+        public QuestionAnswer QuestionAnswer { get; set; } = default!;
         
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-          if (!ModelState.IsValid || _context.UserDetails == null || UserDetails == null)
+          if (!ModelState.IsValid || _context.QuestionAnswer == null || QuestionAnswer == null)
             {
                 return Page();
             }
 
-            _context.UserDetails.Add(UserDetails);
+            _context.QuestionAnswer.Add(QuestionAnswer);
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");
         }
+
     }
 }

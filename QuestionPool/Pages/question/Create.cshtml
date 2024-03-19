@@ -105,21 +105,14 @@
                                     <label asp-for="Question.TermId" class="control-label">Term</label>
                                 <select asp-for="Question.TermId" class="form-control" asp-items="ViewBag.TermId"></select>
                             </div>
-                                <div id="choiceContainer">
-                                    <div class="mb-3" id="choiceFieldGroup" style="display: none;">
-                                        <label asp-for="Question.Choice" class="control-label">Choices</label>
-                                        <input asp-for="Question.Choice" class="form-control" />
-                                        <span asp-validation-for="Question.Choice" class="text-danger"></span>
-                                    </div>
-                                </div>
-                                <div id="dropdownSection" class="mb-3">
-                                    <select id="dropdownChoice" class="form-control">
-                                        <option value="">Please select an option</option>
-                                        <option value="show">Show Choice Field</option>
-                                        <option value="hide">Hide Choice Field</option>
-                                    </select>
-                                </div>
-                                <button type="button" id="addChoice" class="btn btn-primary">Add Choice</button>
+                               <div id="choiceContainer">
+                                <!-- Dynamic choice fields will be added here -->
+                            </div>
+                            <button type="button" id="addChoice" class="btn btn-primary">Add Choice</button>
+
+                            <!-- Hidden field for storing choices as JSON -->
+                            <input type="hidden" id="Choice" name="Question.Choice" />
+
                         </div>
                     </div>
                 </div>
@@ -129,9 +122,8 @@
             <div class="row">
                 <div class="col-12">
                     <div class="text-center mb-3">
-                        <button type="submit"  class="btn btn-primary">Create</button>
+                        <button type="submit"  class="btn btn-primary">Save</button>
                         <a asp-page="Index" class="btn btn-blue waves-effect waves-light">Back to List</a>
-                        <a href="~/answer/Create" class="btn btn-info waves-effect waves-light">Create Answer</a>
                     </div>
                 </div> <!-- end col -->
             </div>
@@ -144,24 +136,7 @@
                 var image = document.getElementById('output');
                 image.src = URL.createObjectURL(event.target.files[0]);
             };
-            document.addEventListener("DOMContentLoaded", function () {
-                var addButton = document.getElementById("addChoice");
-                var container = document.getElementById("choiceContainer");
-                var index = 2;
-                var maxChoices = 4;// 初始选择索引
 
-                addButton.addEventListener("click", function () {
-                    var newDiv = document.createElement("div");
-                    newDiv.className = "mb-3";
-                    newDiv.innerHTML = `
-                                            <label class="control-label">Choice ${index}:</label>
-                                            <input type="text" class="form-control" name="Choice${index}" />
-                                            <span class="text-danger"></span>
-                                        `;
-                    container.appendChild(newDiv);
-                    index++;
-                });
-            });
         </script>
 
         @section Scripts {
@@ -169,27 +144,65 @@
                 await Html.RenderPartialAsync("_ValidationScriptsPartial");
             }
             <script>
-                document.addEventListener("DOMContentLoaded", function () {
-                    // Get the select element for dropdown choice
-                    var dropdownChoice = document.getElementById("dropdownChoice");
-                    // Get the choice field group
-                    var choiceFieldGroup = document.getElementById("choiceFieldGroup");
+                var choices = [];
 
-                    // Event listener for change event on dropdown choice
-                    dropdownChoice.addEventListener("change", function () {
-                        // Get the selected value
-                        var selectedOption = this.value;
+                // Add choice function
+                function AddChoice() {
+                    if (choices.length >=4) {
+                        alert("You have reached the maximum number of choices (4).");
+                        return;
+                    }
 
-                        // Conditionally display or hide the choice field group
-                        if (selectedOption === "show") {
-                            // Show the choice field group
-                            choiceFieldGroup.style.display = "block";
-                        } else {
-                            // Hide the choice field group
-                            choiceFieldGroup.style.display = "none";
-                        }
+                    var newDiv = document.createElement("div");
+                    newDiv.className = "mb-3 choiceFieldGroup";
+                    var index = choices.length;
+                    newDiv.innerHTML = `
+                    <label class="control-label">Choice ${index + 1}:</label>
+                    <input type="text" class="form-control choiceInput" name="Choice${index + 1}" value="" /> <!-- 设置默认值为空字符串 -->
+                        <button type="button" class="btn btn-danger deleteChoice">Delete</button>
+                        <span class="text-danger"></span>
+                    `;
+                    document.getElementById("choiceContainer").appendChild(newDiv);
+                    choices.push(""); // 添加一个空的选择项
+                    UpdateChoiceField(); // 更新隐藏字段
+                }
+
+                // Delete choice function
+                function DeleteChoice(event) {
+                    event.target.parentElement.remove();
+                    UpdateChoiceField();
+                }
+
+                // Update hidden field with choices as JSON
+                function UpdateChoiceField() {
+                    var choiceInputs = document.querySelectorAll(".choiceInput");
+                    choices = [];
+                    choiceInputs.forEach(function (input) {
+                        choices.push(input.value); // Push current value, ensuring capture of all inputs
                     });
+                    document.getElementById("Choice").value = JSON.stringify(choices);
+                }
+
+                // Event listeners
+                document.getElementById("addChoice").addEventListener("click", function () {
+                    AddChoice();
                 });
+
+                document.addEventListener("click", function (event) {
+                    if (event.target.classList.contains("deleteChoice")) {
+                        DeleteChoice(event);
+                    }
+                });
+                document.getElementById("choiceContainer").addEventListener("input", function (event) {
+                    if (event.target.classList.contains("choiceInput")) {
+                        UpdateChoiceField();
+                    }
+                });
+                // Initialize choices display on page load
+                window.onload = function () {
+                    UpdateChoiceField();
+                };
+             
             </script>
         }
     </div> <!-- content -->
@@ -207,8 +220,6 @@
     <!-- Init js-->
     <script src="~/assets/js/pages/form-fileuploads.init.js"></script>
 
-    <!-- Init js -->
-    <script src="~/assets/js/pages/add-product.init.js"></script>
 
 </body>
 @* <h1>Create</h1>

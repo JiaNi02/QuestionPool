@@ -21,10 +21,14 @@ namespace QuestionPool.Pages.subject
             Subjects = await _context.Subjects.ToListAsync();
         }
 
-        public IActionResult OnPost(int choosedSubject)
+        public IActionResult OnPost(string selectedSubjectId)
         {
-            // Redirect to the next step with the selected subject
-            return RedirectToPage("/NextStepPage", new { choosedSubjectId = choosedSubject });
+            if (string.IsNullOrEmpty(selectedSubjectId))
+            {
+                return RedirectToPage("/Error");
+            }
+
+            return RedirectToPage("/question/Questionbank", new { selectedSubjectId });
         }
     }
 }

@@ -4,6 +4,7 @@
 @{
     ViewData["Title"] = "Create";
 }
+@* <script src="https://cdn.tiny.cloud/1/i0wlzeqbdu2uistzjyp12246lo9qdf1x4uhmy31eh4mrqb8i/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script> *@
 <body>
     <div class="content">
 
@@ -34,40 +35,37 @@
 
                                 <div class="mb-3">
                                     <label asp-for="QuestionAnswer.Answer" class="control-label"></label>
-                                    <input asp-for="QuestionAnswer.Answer" class="form-control" type="text" />
+                                     <input asp-for="QuestionAnswer.Answer" class="form-control" type="text" />
                                     <span asp-validation-for="QuestionAnswer.Answer" class="text-danger"></span>
                                 </div>
                                 <div class="mb-3">
                                     <label asp-for="QuestionAnswer.QuestionId" class="control-label"></label>
                                     <select asp-for="QuestionAnswer.QuestionId" class="form-control" asp-items="ViewBag.QuestionId"></select>
                                 </div>
-@*                                 <div id="choiceContainer">
-                                    <div class="mb-3">
-                                        <label asp-for="QuestionAnswer.Choice" class="control-label">Choice</label>
-                                        <input asp-for="QuestionAnswer.Choice" class="form-control" name="Choice1" />
-                                        <span asp-validation-for="QuestionAnswer.Choice" class="text-danger"></span>
-                                    </div>                                    
-                                </div>
-                                <button type="button" id="addChoice" class="btn btn-primary">Add Choice</button> *@
                                 
                             </div>
 
                             <div class="col-lg-6">
-                                <div class="mb-3">
+                                <form method="post" enctype="multipart/form-data">
+                                    <div class="mb-3">
+                                        <label asp-for="QuestionAnswer.Image" class="control-label"></label>
+                                        <input asp-for="QuestionAnswer.Image" class="form-control" type="file" accept="image/*" />
+                                        <span asp-validation-for="QuestionAnswer.Image" class="text-danger"></span>
+                                    </div>
+                                </form>
+                                <div id="dropdownSection" class="mb-3">
+                                    <select id="dropdownChoice" class="form-control">
+                                        <option value="">Please select an option</option>
+                                        <option value="show">Show Answer's Order Field</option>
+                                        <option value="hide">Hide Answer's Order Field</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3" id="choiceFieldGroup" style="display: none;">
                                     <label asp-for="QuestionAnswer.Order" class="control-label"></label>
                                     <input asp-for="QuestionAnswer.Order" class="form-control" />
                                     <span asp-validation-for="QuestionAnswer.Order" class="text-danger"></span>
                                 </div>
-                                <div class="mb-3">
-                                    <label asp-for="QuestionAnswer.Image" class="control-label"></label>
-                                    <input asp-for="QuestionAnswer.Image" class="form-control" />
-                                    <span asp-validation-for="QuestionAnswer.Image" class="text-danger"></span>
-                                </div>
-@*                                 <div class="mb-3">
-                                    <label asp-for="QuestionAnswer.IsTheAnswer" class="control-label"></label>
-                                    <input asp-for="QuestionAnswer.IsTheAnswer" class="form-control" />
-                                    <span asp-validation-for="QuestionAnswer.IsTheAnswer" class="text-danger"></span>
-                                </div> *@
+
                                 <div class="form-group">
                                     <input type="submit" value="Create" class="btn btn-primary" />
                                 </div>
@@ -81,30 +79,21 @@
             <!-- end row -->
         </div> <!-- container -->
         <script>
-            var loadFile = function (event) {
-                var image = document.getElementById('output');
-                image.src = URL.createObjectURL(event.target.files[0]);
-            };
-
-                document.addEventListener("DOMContentLoaded", function () {
-                    var addButton = document.getElementById("addChoice");
-                    var container = document.getElementById("choiceContainer");
-                    var index = 2; // 初始选择索引
-
-                    addButton.addEventListener("click", function () {
-                        var newDiv = document.createElement("div");
-                        newDiv.className = "mb-3";
-                        newDiv.innerHTML = `
-                                <label class="control-label">Choice ${index}:</label>
-                                <input type="text" class="form-control" name="Choice${index}" />
-                                <span class="text-danger"></span>
-                            `;
-                        container.appendChild(newDiv);
-                        index++;
-                    });
-                });
-                
-            </script>
+            tinymce.init({
+                selector: '#editor',
+                elementpath: false,
+                branding: false,
+                plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker tinymcespellchecker permanentpen powerpaste advtable advcode editimage advtemplate ai mentions tinycomments tableofcontents footnotes mergetags autocorrect typography inlinecss',
+                toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+                tinycomments_mode: 'embedded',
+                tinycomments_author: 'Author name',
+                mergetags_list: [
+                    { value: 'First.Name', title: 'First Name' },
+                    { value: 'Email', title: 'Email' },
+                ],
+                ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
+            });
+        </script>
        
     </div> <!-- content -->
     <!-- Vendor js -->
@@ -125,6 +114,29 @@
             @{
                 await Html.RenderPartialAsync("_ValidationScriptsPartial");
             }
+               <script>
+                    document.addEventListener("DOMContentLoaded", function () {
+                        // Get the select element for dropdown choice
+                        var dropdownChoice = document.getElementById("dropdownChoice");
+                        // Get the choice field group
+                        var choiceFieldGroup = document.getElementById("choiceFieldGroup");
+
+                        // Event listener for change event on dropdown choice
+                        dropdownChoice.addEventListener("change", function () {
+                            // Get the selected value
+                            var selectedOption = this.value;
+
+                            // Conditionally display or hide the choice field group
+                            if (selectedOption === "show") {
+                                // Show the choice field group
+                                choiceFieldGroup.style.display = "block";
+                            } else {
+                                // Hide the choice field group
+                                choiceFieldGroup.style.display = "none";
+                            }
+                        });
+                    });
+                </script>
 }
 @* <h1>Create</h1>
 

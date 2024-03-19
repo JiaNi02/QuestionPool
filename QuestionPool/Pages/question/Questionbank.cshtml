@@ -1,0 +1,237 @@
+﻿@page
+@model QuestionPool.Pages.question.QuestionbankModel
+@{
+}
+<head>
+
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="~/assets/images/favicon.ico">
+
+    <!-- Bootstrap Tables css -->
+    <link href="~/assets/libs/bootstrap-table/bootstrap-table.min.css" rel="stylesheet" type="text/css" />
+
+
+    <!-- Theme Config Js -->
+    <script src="~/assets/js/head.js"></script>
+
+    <!-- Bootstrap css -->
+    <link href="~/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" id="app-style" />
+
+    <!-- App css -->
+    <link href="~/assets/css/app.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- Icons css -->
+    <link href="~/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box">
+                        <div class="page-title-right">
+                            <ol class="breadcrumb m-0">
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">ExamQuestionPool</a></li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Question List</a></li>
+
+                            </ol>
+                        </div>
+                        <h4 class="page-title">Question List</h4>
+                    </div>
+                </div>
+            </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <form id="questionlist" method="post">
+                          <table id="demo-custom-toolbar" class="table-border" data-toggle="table" data-toolbar="#demo-delete-row" data-search="true"
+                           data-show-refresh="true" data-show-columns="true" data-sort-name="id" data-page-list="[5, 10, 20]"
+                           data-page-size="5" data-pagination="true" data-show-pagination-switch="true">
+                        <thead class="table-light">
+                            <tr>
+                                <th data-field="state" data-checkbox="true"></th>
+                                <th data-field="name" data-sortable="true">Name</th>
+                                <th data-field="text" data-sortable="true" data-formatter="dateFormatter">Question</th>
+                                <th data-field="amount" data-align="center" data-sortable="true">Chioce</th>
+                                <th data-field="status" data-align="center" data-sortable="true">Mark</th>
+                                 <th data-sortable="true" data-align="center">Answer</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                                    @foreach (var item in Model.Questions)
+                                    {
+                                        <tr>
+                                            <td><input type="checkbox" class="selectedQuestion" name="SelectedQuestions" value="@item.Id" /></td>
+                                            <td class="name">@Html.DisplayFor(modelItem => item.Name)</td>
+                                            <td class="question">@Html.DisplayFor(modelItem => item.Questions)</td>
+                                            <td class="choice">@Html.DisplayFor(modelItem => item.Choice)</td>
+                                            <td class ="mark">@Html.DisplayFor(modelItem => item.Mark)</td>
+                                            <td>
+                                                @if (item.QuestionAnswer.Any())
+                                                {
+                                                    <ul>
+                                                        @foreach (var answer in item.QuestionAnswer)
+                                                        {
+                                                            <li>@answer.Answer</li>
+                                                        }
+                                                    </ul>
+                                                }
+                                                else
+                                                {
+                                                    <p>No answers available</p>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                        </tbody>
+                    </table>
+                     <input type="hidden" id="SelectedData" name="SelectedData" />
+                    <button type="submit" id="exportButton" class="button">Export Selected Data</button>
+                    <button type="button" id="showDataButton" class="button">Show Selected Data</button>
+                    </form>
+                            <div class="col-sm-12">
+                            <div id="dataModal" class="modal">
+                                <div class="modal-content">
+                                    <span class="close">&times;</span>
+                                    <h2>Selected Data</h2>
+                                    <pre id="selectedDataContent"></pre>
+                                </div>
+                            </div>
+                            </div>
+
+                </div>
+            </div> <!-- end card-->
+        </div> <!-- end col-->
+    </div>
+    <!-- end row-->
+
+    </div> <!-- container -->
+    </div> <!-- content --> 
+
+</body>
+<script>
+    document.getElementById("showDataButton").addEventListener("click", function () {
+        var selectedData = [];
+        var checkboxes = document.querySelectorAll('input[name="SelectedQuestions"]:checked');
+        checkboxes.forEach(function (checkbox) {
+            var rowData = Array.from(checkbox.closest('tr').querySelectorAll('td')).map(function (td) {
+                return td.textContent.trim();
+            });
+            selectedData.push(rowData);
+        });
+        displaySelectedData(selectedData);
+    });
+
+    // Display selected row data
+    function displaySelectedData(selectedData) {
+        var modal = document.getElementById("dataModal");
+        var closeButton = document.getElementsByClassName("close")[0];
+        var selectedDataContent = document.getElementById("selectedDataContent");
+
+        // Clear previous data
+        selectedDataContent.textContent = "";
+
+        // Append selected row data to modal content
+        selectedData.forEach(function (rowData) {
+            rowData.forEach(function (value) {
+                selectedDataContent.textContent += value + " ";
+            });
+            selectedDataContent.textContent += "\n";
+        });
+
+        // Show modal
+        modal.style.display = "block";
+    }
+    var modal = document.getElementById("dataModal");
+    var closeButton = document.getElementsByClassName("close")[0];
+
+    // 点击关闭按钮时触发关闭模态框事件
+    closeButton.onclick = function () {
+        modal.style.display = "none";
+    }
+
+    // 点击模态框外部区域时触发关闭模态框事件
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    // Listen for change events on checkboxes within the table
+    // $('input[type="checkbox"]').change(function ()) {
+    //     if ($('input[type="checkbox"]:checked').length > 0) {
+    //         $('#exportButton').prop('disabled', false);
+    //     } else {
+    //         $('#exportButton').prop('disabled', true);
+    //     }
+    // });
+
+    // // Handle button click event
+    // $('#exportButton').on('click', function () {
+    //     alert('Export button clicked!');
+    // });
+</script>
+<!-- Vendor js -->
+<script src="~/assets/js/vendor.min.js"></script>
+
+<!-- Bootstrap Tables js -->
+<script src="~/assets/libs/bootstrap-table/bootstrap-table.min.js"></script>
+
+<!-- Init js -->
+<script src="~/assets/js/pages/bootstrap-tables.init.js"></script>
+
+@* <div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="dataTable" class="table table-borderless">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Questions</th>
+                                        <th>Choice</th>
+                                        <th>Mark</th>
+                                        <th>Answers</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.Questions)
+                                    {
+                                        <tr>
+                                            <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.Questions)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.Choice)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.Mark)</td>
+                                            <td>
+                                                @if (item.QuestionAnswer.Any())
+                                                {
+                                                    <ul>
+                                                        @foreach (var answer in item.QuestionAnswer)
+                                                        {
+                                                            <li>@answer.Answer</li>
+                                                        }
+                                                    </ul>
+                                                }
+                                                else
+                                                {
+                                                    <p>No answers available</p>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> *@
+
+

@@ -25,13 +25,13 @@ namespace QuestionPool.Pages.answer
         }
 
         [BindProperty]
-        public QuestionAnswer QuestionAnswer { get; set; } = default!;
-        
+        public QuestionAnswer QuestionAnswer { get; set; } = new QuestionAnswer();
+
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-          if (!ModelState.IsValid || _context.QuestionAnswer == null || QuestionAnswer == null)
+            if (!ModelState.IsValid || QuestionAnswer == null)
             {
                 return Page();
             }

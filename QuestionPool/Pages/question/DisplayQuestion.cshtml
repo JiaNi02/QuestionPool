@@ -1,0 +1,25 @@
+﻿@page
+@using Newtonsoft.Json
+@model QuestionPool.Pages.question.DisplayQuestionModel
+@{
+}
+<body>
+    <h1>Generated Document</h1>
+    <pre id="documentContent"></pre>
+
+    <script>
+        // 获取文档内容并显示在页面上
+        var selectedData = @Html.Raw(JsonConvert.SerializeObject(Model.SelectedData));
+        var documentContent = generateDocument(selectedData);
+        document.getElementById("documentContent").textContent = documentContent;
+
+        // 生成文档内容
+        function generateDocument(selectedData) {
+            var documentContent = "Selected Data:\n";
+            selectedData.forEach(function (data) {
+                documentContent += data + "\n";
+            });
+            return documentContent;
+        }
+    </script>
+</body>

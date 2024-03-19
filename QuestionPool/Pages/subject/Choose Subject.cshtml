@@ -21,7 +21,7 @@
             </div>
         </div>
         <!-- end page title -->
-
+        <h2></h2>
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-7">
@@ -33,7 +33,7 @@
                             <form method="post">
                                 <div class="mb-3">
                                     <label for="choosedSubject" class="form-label">Select Subject:</label>
-                                    <select name="choosedSubject" id="choosedSubject" class="form-select">
+                                    <select name="selectedSubjectId" id="choosedSubject" class="form-select">
                                         <option value="">All Subjects</option>
                                         @foreach (var subject in Model.Subjects)
                                         {
@@ -55,6 +55,7 @@
 </div> <!-- content -->
 <!-- Vendor js -->
 <script src="~/assets/js/vendor.min.js"></script>
+
 
 @* <h1>Select Subject</h1>
 

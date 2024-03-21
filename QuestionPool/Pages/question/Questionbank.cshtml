@@ -22,7 +22,16 @@
 
     <!-- Icons css -->
     <link href="~/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<style>
+        #dataModal {
+            display: none; 
+            position: relative; 
+            top: 100%;
+            margin-top: 20px; 
+            width:950px;
+        }
+</style>
+
 </head>
 <body>
     <div class="content">
@@ -51,12 +60,13 @@
                            data-page-size="5" data-pagination="true" data-show-pagination-switch="true">
                         <thead class="table-light">
                             <tr>
-                                <th data-field="state" data-checkbox="true"></th>
+
+                                 <th><input type="checkbox" id="selectAll" /></th>
                                 <th data-field="name" data-sortable="true">Name</th>
                                 <th data-field="text" data-sortable="true" data-formatter="dateFormatter">Question</th>
                                 <th data-field="amount" data-align="center" data-sortable="true">Chioce</th>
                                 <th data-field="status" data-align="center" data-sortable="true">Mark</th>
-                                 <th data-sortable="true" data-align="center">Answer</th>
+                                <th data-sortable="true" data-align="center">Answer</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -68,7 +78,7 @@
                                             <td class="question">@Html.DisplayFor(modelItem => item.Questions)</td>
                                             <td class="choice">@Html.DisplayFor(modelItem => item.Choice)</td>
                                             <td class ="mark">@Html.DisplayFor(modelItem => item.Mark)</td>
-                                            <td>
+                                            <td class="answer">
                                                 @if (item.QuestionAnswer.Any())
                                                 {
                                                     <ul>
@@ -87,19 +97,10 @@
                                     }
                         </tbody>
                     </table>
-                     <input type="hidden" id="SelectedData" name="SelectedData" />
+                    <input type="hidden" id="SelectedData" name="SelectedData" />
                     <button type="submit" id="exportButton" class="button">Export Selected Data</button>
                     <button type="button" id="showDataButton" class="button">Show Selected Data</button>
-                    </form>
-                            <div class="col-sm-12">
-                            <div id="dataModal" class="modal">
-                                <div class="modal-content">
-                                    <span class="close">&times;</span>
-                                    <h2>Selected Data</h2>
-                                    <pre id="selectedDataContent"></pre>
-                                </div>
-                            </div>
-                            </div>
+                    </form>                            
 
                 </div>
             </div> <!-- end card-->
@@ -107,11 +108,39 @@
     </div>
     <!-- end row-->
 
+                <div id="dataModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <h4>Selected Data</h4>
+                        <pre id="selectedDataContent"></pre>
+                    </div>
+                </div>
+
+
     </div> <!-- container -->
     </div> <!-- content --> 
 
 </body>
 <script>
+
+    document.getElementById("exportButton").addEventListener("click", function () {
+        var selectedData = [];
+        var checkboxes = document.querySelectorAll('input[name="SelectedQuestions"]:checked');
+        checkboxes.forEach(function (checkbox) {
+            var rowData = {};
+            var row = checkbox.closest('tr');
+            rowData['id'] = checkbox.value;
+            rowData['name'] = row.querySelector('.name').textContent.trim();
+            rowData['question'] = row.querySelector('.question').textContent.trim();
+            rowData['choice'] = row.querySelector('.choice').textContent.trim();
+            rowData['mark'] = row.querySelector('.mark').textContent.trim();
+            rowData['answer'] = row.querySelector('.answer').textContent.trim();
+            selectedData.push(rowData);
+        });
+        document.getElementById("SelectedData").value = JSON.stringify(selectedData);
+        document.getElementById("questionlist").submit();
+    });
+    //NEW
     document.getElementById("showDataButton").addEventListener("click", function () {
         var selectedData = [];
         var checkboxes = document.querySelectorAll('input[name="SelectedQuestions"]:checked');
@@ -158,7 +187,7 @@
             modal.style.display = "none";
         }
     }
-
+   
     // Listen for change events on checkboxes within the table
     // $('input[type="checkbox"]').change(function ()) {
     //     if ($('input[type="checkbox"]:checked').length > 0) {
@@ -233,5 +262,23 @@
         </div>
     </div>
 </div> *@
+@*     // const checkboxes = document.querySelectorAll('.selectedQuestion');
+    // const selectedCheckboxId = document.getElementById('selectedCheckboxId');
 
+    // function handleCheckboxChange() {
+    //     let checkedCheckboxId = '';
+
+    //     // Check if any checkbox is checked
+    //     checkboxes.forEach(checkbox => {
+    //         if (checkbox.checked) {
+    //             checkedCheckboxId = checkbox.value;
+    //         }
+    //     });
+
+    //     // Update the element with the selected checkbox ID
+    //     selectedCheckboxId.textContent = 'Selected Checkbox ID: ' + checkedCheckboxId;
+
+    //     checkboxes.forEach(checkbox => {
+    //         checkbox.addEventListener('change', handleCheckboxChange);
+    //     }); *@
 

@@ -112,9 +112,11 @@ namespace QuestionPool.Models
 
             modelBuilder.Entity<UserDetails>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
 
-                entity.Property(e => e.AspNetUserId).HasMaxLength(450);
+
+                entity.Property(e => e.AspNetUserId)
+                .IsRequired()
+                .HasMaxLength(450);
 
                 entity.HasOne(d => d.Department)
                     .WithMany(p => p.UserDetails)

@@ -60,6 +60,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Pages\user\" />
     <Folder Include="wwwroot\assets\libs\c3\src\" />
     <Folder Include="wwwroot\assets\libs\chartist\scss\settings\" />
     <Folder Include="wwwroot\assets\libs\datatables.net-bs5\types\" />

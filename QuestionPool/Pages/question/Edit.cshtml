@@ -4,8 +4,156 @@
 @{
     ViewData["Title"] = "Edit";
 }
+<head>
+    <meta charset="utf-8" />
+    <title>Dashboard 2 | Ubold - Responsive Bootstrap 5 Admin Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+    <meta content="Coderthemes" name="author" />
 
-<h1>Edit</h1>
+    <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="~/asset/images/favicon.ico">
+
+    <!-- plugin css -->
+    <link href="~/assets/libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.css" rel="stylesheet" type="text/css" />
+
+    <!-- Theme Config Js -->
+    <script src="~/assets/js/head.js"></script>
+
+    <!-- Bootstrap css -->
+    <link href="~/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" id="app-style" />
+
+    <!-- App css -->
+    <link href="~/assets/css/app.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- Icons css -->
+    <link href="~/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+    <!-- Plugins css-->
+    <link href="~/assets/libs/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/libs/dropzone/min/dropzone.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/libs/quill/quill.core.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/libs/quill/quill.snow.css" rel="stylesheet" type="text/css" />
+    @* <script src="https://cdn.tiny.cloud/1/i0wlzeqbdu2uistzjyp12246lo9qdf1x4uhmy31eh4mrqb8i/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script> *@
+    @* <script src="~/js/site.js" asp-append-version="true"></script> *@
+</head>
+<body>
+    <div class="content">
+
+        <!-- Start Content-->
+        <div class="container-fluid">
+
+            <!-- start page title -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box">
+                        <div class="page-title-right">
+                            <ol class="breadcrumb m-0">
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">ExamQuestionPool</a></li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">View</a></li>
+                                <li class="breadcrumb-item active">Add Question</li>
+                            </ol>
+                        </div>
+                        <h4 class="page-title">Question List</h4>
+                    </div>
+                </div>
+            </div>
+            <!-- end page title -->
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Question.Id" />
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <!-- Content for the left side -->
+
+                                <div class="mb-3">
+                                    <label asp-for="Question.Name" class="form-label">Question Description</label>
+                                    <input asp-for="Question.Name" class="form-control" />
+                                    <span asp-validation-for="Question.Name" class="text-danger"></span>
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="Question.Questions" class="form-label"></label>
+                                    <input asp-for="Question.Questions" class="form-control" />
+                                    <span asp-validation-for="Question.Questions" class="text-danger"></span>
+
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="Question.Mark" class="form-label"></label>
+                                    <input asp-for="Question.Mark" class="form-control" />
+                                    <span asp-validation-for="Question.Mark" class="text-danger"></span>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="example-fileinput" class="form-label">Upload File</label>
+                                    <input asp-for="Question.Image" class="form-control" type="file" accept="image/*" name="image" id="file" onchange="loadFile(event)">
+                                    <span asp-validation-for="Question.Image" class="text-danger"></span>
+                                    <p><img id="output" width="150" /></p>
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="Question.ExamTypeId" class="control-label"></label>
+                                    <select asp-for="Question.ExamTypeId" class="form-control" asp-items="ViewBag.ExamTypeId"></select>
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-6">
+                                <!-- Content for the right side  -->
+                                <div class="mb-3">
+                                    <label asp-for="Question.SubjectId" class="control-label">Subject</label>
+                                    <select asp-for="Question.SubjectId" class="form-control" asp-items="ViewBag.SubjectId"></select>
+                                    <span asp-validation-for="Question.SubjectId" class="text-danger"></span>
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="Question.TermId" class="control-label">Term</label>
+                                    <select asp-for="Question.TermId" class="form-control" asp-items="ViewBag.TermId"></select>
+                                    <span asp-validation-for="Question.TermId" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Question.Choice" class="control-label"></label>
+                                    <input asp-for="Question.Choice" class="form-control" />
+                                    <span asp-validation-for="Question.Choice" class="text-danger"></span>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end row -->
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="text-center mb-3">
+                            <div class="form-group">
+                                <input type="submit" value="Save" class="btn btn-primary" />
+                            <a asp-page="Index" class="btn btn-blue waves-effect waves-light">Back to List</a>
+                            </div>
+                        </div>
+                    </div> <!-- end col -->
+                </div>
+            </form>
+            </div>
+        </div> <!-- container -->
+        <!-- Vendor js -->
+        <script src="~/assets/js/vendor.min.js"></script>
+
+        <!-- Select2 js-->
+        <script src="~/assets/libs/select2/js/select2.min.js"></script>
+        <!-- Dropzone file uploads-->
+        <script src="~/assets/libs/dropzone/min/dropzone.min.js"></script>
+
+        <!-- Quill js -->
+        <script src="~/assets/libs/quill/quill.min.js"></script>
+
+        <!-- Init js-->
+        <script src="~/assets/js/pages/form-fileuploads.init.js"></script>
+        @section Scripts {
+            @{
+                await Html.RenderPartialAsync("_ValidationScriptsPartial");
+            }
+        }
+</body>
+@* <h1>Edit</h1>
 
 <h4>Question</h4>
 <hr />
@@ -88,8 +236,6 @@
 
 <div>
     <a asp-page="./Index">Back to List</a>
-</div>
+</div> *@
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+

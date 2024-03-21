@@ -12,6 +12,7 @@ namespace QuestionPool.Pages.question
 
         public void OnGet(string? selectedData)
         {
+
             if (selectedData != null)
             {
                 SelectedData = JsonConvert.DeserializeObject<List<string>>(selectedData);

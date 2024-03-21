@@ -22,7 +22,7 @@ namespace QuestionPool.Pages.question
         {
             if (!string.IsNullOrEmpty(selectedSubjectId))
             {
-                // ????????????
+
                 Questions = await _context.Question
                     .Include(q => q.QuestionAnswer)
                     .Where(q => q.SubjectId.GetValueOrDefault().ToString() == selectedSubjectId)
@@ -32,9 +32,11 @@ namespace QuestionPool.Pages.question
         [BindProperty]
         public List<string> SelectedData { get; set; } = new List<string>();
 
+
         public IActionResult OnPost()
         {
-            if (SelectedData.Count > 0)
+
+            if (SelectedData != null && SelectedData.Count > 0)
             {
                 // ????
                 var documentContent = GenerateDocument(SelectedData);
@@ -51,7 +53,7 @@ namespace QuestionPool.Pages.question
 
         private string GenerateDocument(List<string> selectedData)
         {
-            // ??????
+
             var documentContent = new StringBuilder();
             documentContent.AppendLine("Selected Data:");
             foreach (var data in selectedData)
@@ -63,3 +65,11 @@ namespace QuestionPool.Pages.question
     }
 }
 
+//if (SelectedData.Count > 0)
+//{
+
+//    var documentContent = GenerateDocument(SelectedData);
+
+
+//    return File(Encoding.UTF8.GetBytes(documentContent), "text/plain", "selected_data.txt");
+//}

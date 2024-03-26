@@ -57,6 +57,9 @@
                                    class="table-borderless">
                                 <thead class="table-light">
                                     <tr>
+                                    <th>
+                                       No.
+                                    </th>
                                         <th>@Html.DisplayNameFor(model => model.Question[0].Name)</th>
                                         <th>@Html.DisplayNameFor(model => model.Question[0].Questions)</th>
                                         <th>@Html.DisplayNameFor(model => model.Question[0].Choice)</th>
@@ -73,8 +76,11 @@
                                     @foreach (var item in Model.Question)
                                     {
                                         <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.QuestionNumber)
+                                        </td>
                                             <td>@Html.DisplayFor(modelItem => item.Name)</td>
-                                            <td>@Html.DisplayFor(modelItem => item.Questions)</td>
+                                            <td>@Html.Raw(item.Questions)</td>
                                             <td>@Html.DisplayFor(modelItem => item.Choice)</td>
                                             <td>@Html.DisplayFor(modelItem => item.Mark)</td>
                                             <td>@Html.DisplayFor(modelItem => item.Image)</td>
@@ -143,6 +149,7 @@
                     $('#dataTable tbody').empty();
                     $.each(data, function (index, item) {
                         var row = $('<tr>');
+                        row.append('<td>' + item.QuestionNumber + '</td>');
                         row.append('<td>' + item.Name + '</td>');
                         row.append('<td>' + item.Questions + '</td>');
                         row.append('<td>' + item.Choice + '</td>');

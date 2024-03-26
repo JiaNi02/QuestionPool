@@ -1,25 +1,190 @@
 ﻿@page
-@using Newtonsoft.Json
+@using QuestionPool.Models
 @model QuestionPool.Pages.question.DisplayQuestionModel
 @{
 }
-<body>
-    <h1>Generated Document</h1>
-    <pre id="documentContent"></pre>
+<head>
+    <!-- plugin css -->
+    <link href="~/assets/libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/libs/quill/quill.core.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/libs/quill/quill.bubble.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/libs/quill/quill.snow.css" rel="stylesheet" type="text/css" />
 
-    <script>
-        // 获取文档内容并显示在页面上
-        var selectedData = @Html.Raw(JsonConvert.SerializeObject(Model.SelectedData));
-        var documentContent = generateDocument(selectedData);
-        document.getElementById("documentContent").textContent = documentContent;
+    <!-- Bootstrap Tables css -->
+    <link href="~/assets/libs/bootstrap-table/bootstrap-table.min.css" rel="stylesheet" type="text/css" />
 
-        // 生成文档内容
-        function generateDocument(selectedData) {
-            var documentContent = "Selected Data:\n";
-            selectedData.forEach(function (data) {
-                documentContent += data + "\n";
-            });
-            return documentContent;
+
+    <!-- Theme Config Js -->
+    <script src="~/assets/js/head.js"></script>
+
+    <!-- Bootstrap css -->
+    <link href="~/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" id="app-style" />
+
+    <!-- App css -->
+    <link href="~/assets/css/app.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- Icons css -->
+    <link href="~/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+    <script src="https://kendo.cdn.telerik.com/2023.1.425/js/kendo.all.min.js"></script>
+
+
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/themes/6.3.0/default/default-ocean-blue.css">
+    <script src="https://kendo.cdn.telerik.com/2023.1.425/js/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.3/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.3/html2canvas.min.js"></script>
+
+    <style>
+        html {
+            background-color: white;
+            font-size: 14px;
+            font-family: Arial, Helvetica, sans-serif;
         }
-    </script>
+        .question-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .question-text {
+            flex-grow: 1;
+        }
+
+        .question-marks {
+            margin-left: 120px; /* Adds some space between the question and the marks */
+            white-space: nowrap; /* Prevents the marks from wrapping */
+        }
+
+        .question-item {
+            cursor: move; /* Change cursor to indicate draggable */
+        }
+    </style>
+</head>
+<body>
+    <h1></h1>
+    <div id="question-container" style="background-color: #f8f9fa; border-radius: 10px; padding: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+        <div style="background-color:#38414A; padding: 20px;">
+            <!-- Your question content goes here -->
+        </div>
+        <!-- Content -->
+        <div class="col-12">
+            <!-- Questions List -->
+            <form method="post">
+            <div id="questions-list">
+                @foreach (var question in Model.Questions)
+                {
+                    <div class="question-item" style="border-bottom: 1px solid #dee2e6; padding: 10px;">
+                        <span class="drag-handle" style="font-size: 10px; cursor: grab;">&#9776;</span> <!-- Drag handle -->
+                        <div style="display: inline-block; vertical-align: top;">
+                            <p class="question-text" style="margin-left: 20px;">
+                                <span class="question-number" style="font-weight: bold; color: darkblue;">@question.QuestionNumber.</span>
+                                <span style="font-weight: bold; color: #333;">@Html.Raw(question.Name)</span>
+                                <br />
+                                <span class="question-text" style="color: #6c757d;">@question.Questions</span>
+                                @*  <span class="question-marks">[@question.Mark marks]</span> *@
+                            </p>
+                            <ul class="answer-choices" style="list-style-type: none; margin-left: 20px;">
+                                @{
+                                    var choices = question.Choice.Trim('[', ']').Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                                    foreach (var choice in choices)
+                                    {
+                                        var formattedChoice = choice.Replace("\"", ""); // Remove quotes
+                                        <li>@formattedChoice.Trim()</li>
+                                    }
+                                }
+                            </ul>
+                        </div>
+                        @* <span class="drag-handle" style="font-size: 20px; cursor: grab;">&#9776;</span> <!-- Drag handle --> *@
+                    </div>
+                }
+            </div>
+            </form>
+            <form method="get">
+                <button type="submit" class="btn btn-info waves-effect waves-light" asp-page-handler="QuestionsToPDF">
+                    <span class="btn-label"><i class="mdi mdi-export"></i></span>Export to Pdf
+                </button>
+            </form>
+              
+        </div>
+
+    </div>
 </body>
+
+
+
+@section scripts {
+    
+    <script>
+        
+        document.addEventListener('DOMContentLoaded', function () {
+            var sortable = new Sortable(document.getElementById('questions-list'), {
+                animation: 150,
+                handle: '.drag-handle',
+                onEnd: function (evt) {
+                    // Update the order of questions after rearrangement
+                    var questionIds = [];
+                    var questionElements = document.querySelectorAll('.question-item');
+                    questionElements.forEach(function (element) {
+                        questionIds.push(parseInt(element.dataset.questionId));
+                    });
+                    // Send the updated order to the server via AJAX or form submission
+                    // You can use Fetch API, jQuery.ajax, or submit a form with updated order
+                    // Example using Fetch API:
+                    fetch('/UpdateQuestionOrder', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ questionIds: questionIds })
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log(data); // Handle server response if needed
+                        })
+                        .catch(error => {
+                            console.error('There was a problem with your fetch operation:', error);
+                        });
+                }
+            });
+        });
+        var questionItems = document.querySelectorAll('.question-item');
+
+        // 为每个问题项元素添加拖放事件监听器
+        questionItems.forEach(function (item, index) {
+            item.addEventListener('dragend', function () {
+                // 获取所有问题项
+                var questionItems = document.querySelectorAll('.question-item');
+
+                // 遍历问题项，并重新设置问题编号
+                questionItems.forEach(function (item, index) {
+                    var questionNumberElement = item.querySelector('.question-number');
+                    if (questionNumberElement) {
+                        // 获取问题编号的实际值（例如，从数据属性中获取）
+                        var questionId = item.dataset.questionId;
+                        var questionNumber = index + 1; // 重新计算问题编号，例如使用索引加 1
+
+                        // 更新问题编号
+                        questionNumberElement.textContent = questionNumber + '.';
+                    }
+                });
+            });
+        });
+        
+        
+    </script>
+}
+<!-- Vendor js -->
+<script src="~/assets/js/vendor.min.js"></script>
+<!-- Plugins js -->
+<script src="~/assets/libs/quill/quill.min.js"></script>
+
+<!-- Init js-->
+<script src="~/assets/js/pages/form-quilljs.init.js"></script>
+

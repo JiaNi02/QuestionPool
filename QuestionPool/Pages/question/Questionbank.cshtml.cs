@@ -29,39 +29,19 @@ namespace QuestionPool.Pages.question
                     .ToListAsync();
             }
         }
-        [BindProperty]
-        public List<string> SelectedData { get; set; } = new List<string>();
-
-
-        public IActionResult OnPost()
+        public IActionResult OnPost(string selectedQuestions)
         {
-
-            if (SelectedData != null && SelectedData.Count > 0)
+            if (!string.IsNullOrEmpty(selectedQuestions))
             {
-                // ????
-                var documentContent = GenerateDocument(SelectedData);
-
-                // ??????
-                return File(Encoding.UTF8.GetBytes(documentContent), "text/plain", "selected_data.txt");
+                return RedirectToPage("/question/DisplayQuestion", new { selectedQuestions });
             }
             else
             {
-               
-                return RedirectToPage("/question/Questionbank"); 
+                // Handle case where no questions are selected
+                return RedirectToPage("/Questionbank"); // Redirect back to Questionbank page
             }
         }
 
-        private string GenerateDocument(List<string> selectedData)
-        {
-
-            var documentContent = new StringBuilder();
-            documentContent.AppendLine("Selected Data:");
-            foreach (var data in selectedData)
-            {
-                documentContent.AppendLine(data);
-            }
-            return documentContent.ToString();
-        }
     }
 }
 

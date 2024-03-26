@@ -113,10 +113,14 @@ namespace QuestionPool.Models
             modelBuilder.Entity<UserDetails>(entity =>
             {
 
-
                 entity.Property(e => e.AspNetUserId)
                 .IsRequired()
                 .HasMaxLength(450);
+
+                entity.HasOne<IdentityUser>()
+                .WithMany()
+                .HasForeignKey(d => d.AspNetUserId)
+                .HasConstraintName("FK_UserDetails_AspNetUsers");
 
                 entity.HasOne(d => d.Department)
                     .WithMany(p => p.UserDetails)

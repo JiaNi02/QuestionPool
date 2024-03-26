@@ -115,8 +115,8 @@
     function statusFormatter(value, row, index) {
         // Define the colors based on status values
         var colors = {
-            'Active': 'text-success',
-            'Inactive': 'text-danger'
+            'Active': 'bg-success text-white rounded-pill small-text',
+            'Inactive': 'bg-danger text-white rounded large-text'
         };
 
         // Apply the color class based on the status
@@ -143,6 +143,27 @@
 
     </script>
 }
+<style>
+    .small-text {
+        font-size: 12px; /* Adjust as needed */
+        padding: 5px; /* Adjust padding to change width */
+    }
+
+    .large-text {
+        font-size: 16px; /* Adjust as needed */
+        padding: 10px; /* Adjust padding to change width */
+    }
+
+    .rounded-pill {
+        border-radius: 20px; /* Adjust border-radius to change curvature */
+        display: inline-block; /* Ensure the element respects padding */
+    }
+
+    .rounded {
+        border-radius: 10px; /* Adjust border-radius to change curvature */
+        display: inline-block; /* Ensure the element respects padding */
+    }
+</style>
 @* <h1>Index</h1>
 
 <p>

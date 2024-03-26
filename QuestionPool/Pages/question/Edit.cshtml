@@ -67,7 +67,11 @@
                         <div class="row">
                             <div class="col-lg-6">
                                 <!-- Content for the left side -->
-
+                                <div class="form-group">
+                                    <label asp-for="Question.QuestionNumber" class="control-label"></label>
+                                    <input asp-for="Question.QuestionNumber" class="form-control" />
+                                    <span asp-validation-for="Question.QuestionNumber" class="text-danger"></span>
+                                </div>
                                 <div class="mb-3">
                                     <label asp-for="Question.Name" class="form-label">Question Description</label>
                                     <input asp-for="Question.Name" class="form-control" />

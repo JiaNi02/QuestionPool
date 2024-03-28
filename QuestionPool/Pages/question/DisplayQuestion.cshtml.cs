@@ -8,10 +8,17 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using QuestionPool.Models;
+using iText.Bouncycastle;
 using iText.Layout;
+using System.Drawing;
+using System.Xml.Linq;
+using System.Text;
+using iText.Html2pdf;
+
 
 namespace QuestionPool.Pages.question
 {
+
     public class DisplayQuestionModel : PageModel
     {
         private readonly QuestionPoolDatabaseContext _context;
@@ -35,70 +42,73 @@ namespace QuestionPool.Pages.question
                     .ToListAsync();
 
                 return Page();
+
             }
             else
             {
                 // Handle case where no questions are selected
                 return RedirectToPage("/Questionbank"); // Redirect back to Questionbank page
             }
+
         }
 
-        private byte[] GeneratePdf(List<Question> questions)
+        public async Task<IActionResult> OnPostGeneratePdfAsync()
         {
-            using (MemoryStream ms = new MemoryStream())
+            MemoryStream ms = new MemoryStream();
+
+            PdfWriter writer = new PdfWriter(ms);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            Document document = new Document(pdfDoc, PageSize.A4, false);
+            writer.SetCloseStream(false);
+
+            foreach (var question in Questions)
             {
-                PdfWriter writer = new PdfWriter(ms);
-                PdfDocument pdfDoc = new PdfDocument(writer);
-                Document document = new Document(pdfDoc, PageSize.A4, false);
-                writer.SetCloseStream(false);
+                Paragraph questionParagraph = new Paragraph()
+                    .SetTextAlignment(TextAlignment.LEFT)
+                    .SetFontSize(12)
+                    .Add(new Text($"{question.QuestionNumber}. {question.Name}\n"))
+                    .Add(new Text($"{question.Questions}\n"));
 
-                // Add header
-                document.Add(new Paragraph("Northwind Products")
-                    .SetTextAlignment(TextAlignment.CENTER)
-                    .SetFontSize(20));
-
-                // Add subheader
-                document.Add(new Paragraph(DateTime.Now.ToShortDateString())
-                    .SetTextAlignment(TextAlignment.CENTER)
-                    .SetFontSize(15));
-
-                // Add empty line and line separator
-                document.Add(new Paragraph(""));
-                document.Add(new LineSeparator(new SolidLine()));
-                document.Add(new Paragraph(""));
-
-                // Add questions to the document
-                foreach (var question in questions)
+                // Add choices
+                var choices = question.Choice.Trim('[', ']').Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (var choice in choices)
                 {
-                    // Add question text
-                    document.Add(new Paragraph(question.Name));
-
-                    // Add question choices
-                    foreach (var choice in question.Choice)
-                    {
-                        document.Add(new Paragraph(choice.ToString()));
-                    }
-
-                    // Add an empty line between questions
-                    document.Add(new Paragraph(""));
+                    var formattedChoice = choice.Replace("\"", "").Trim();
+                    questionParagraph.Add(new Text($"- {formattedChoice}\n"));
                 }
 
-                // Add page numbers
-                int n = pdfDoc.GetNumberOfPages();
-                for (int i = 1; i <= n; i++)
-                {
-                    document.ShowTextAligned(new Paragraph(String.Format("Page " + i + " of " + n)),
-                        559, 806, i, TextAlignment.RIGHT, VerticalAlignment.TOP, 0);
-                }
+                questionParagraph.Add(new Text("\n"));
 
-                // Close the document
-                document.Close();
-
-                // Return the PDF as byte array
-                return ms.ToArray();
+                document.Add(questionParagraph);
             }
 
-        }
+            // Page Numbers
+            int n = pdfDoc.GetNumberOfPages();
+            for (int i = 1; i <= n; i++)
+            {
+                document.ShowTextAligned(new Paragraph(String
+                    .Format("Page " + i + " of " + n)),
+                    559, 806, i, TextAlignment.RIGHT,
+                    VerticalAlignment.TOP, 0);
+            }
 
+            document.Close();
+            byte[] byteInfo = ms.ToArray();
+            ms.Write(byteInfo, 0, byteInfo.Length);
+            ms.Position = 0;
+
+            FileStreamResult fileStreamResult = new FileStreamResult(ms, "application/pdf");
+
+            // Uncomment this to return the file as a download
+            // fileStreamResult.FileDownloadName = "GeneratedQuestions.pdf";
+
+            return fileStreamResult;
+        }
     }
-}
+ }
+
+
+
+
+
+

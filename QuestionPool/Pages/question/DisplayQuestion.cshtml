@@ -1,5 +1,7 @@
 ﻿@page
 @using QuestionPool.Models
+@using System.Text.Json
+@using System.Text.Json.Serialization
 @model QuestionPool.Pages.question.DisplayQuestionModel
 @{
 }
@@ -35,6 +37,7 @@
     <script src="https://kendo.cdn.telerik.com/2023.1.425/js/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.3/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.3/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 
     <style>
         html {
@@ -47,9 +50,14 @@
             justify-content: space-between;
             align-items: center;
         }
+        .question-number{
+            font-weight: bold;
+            color: darkblue;
+        }
 
         .question-text {
             flex-grow: 1;
+            color: #6c757d;
         }
 
         .question-marks {
@@ -58,7 +66,13 @@
         }
 
         .question-item {
-            cursor: move; /* Change cursor to indicate draggable */
+            cursor: move;
+            border-bottom: 1px solid #dee2e6;
+            padding: 10px; /* Change cursor to indicate draggable */
+        }
+        .answer-choices{
+            list-style-type: none;
+            margin-left: 20px;
         }
     </style>
 </head>
@@ -71,21 +85,20 @@
         <!-- Content -->
         <div class="col-12">
             <!-- Questions List -->
-            <form method="post">
-            <div id="questions-list">
+                <div id="questions-list">
                 @foreach (var question in Model.Questions)
                 {
-                    <div class="question-item" style="border-bottom: 1px solid #dee2e6; padding: 10px;">
-                        <span class="drag-handle" style="font-size: 10px; cursor: grab;">&#9776;</span> <!-- Drag handle -->
+                    <div class="question-item">
+                        <span class="drag-handle" style="font-size: 15px; cursor: grab;">&#9776;</span> <!-- Drag handle -->
                         <div style="display: inline-block; vertical-align: top;">
                             <p class="question-text" style="margin-left: 20px;">
-                                <span class="question-number" style="font-weight: bold; color: darkblue;">@question.QuestionNumber.</span>
+                                <span class="question-number">@question.QuestionNumber.</span>
                                 <span style="font-weight: bold; color: #333;">@Html.Raw(question.Name)</span>
                                 <br />
-                                <span class="question-text" style="color: #6c757d;">@question.Questions</span>
+                                <span class="question-text">@question.Questions</span>
                                 @*  <span class="question-marks">[@question.Mark marks]</span> *@
                             </p>
-                            <ul class="answer-choices" style="list-style-type: none; margin-left: 20px;">
+                            <ul class="answer-choices">
                                 @{
                                     var choices = question.Choice.Trim('[', ']').Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                                     foreach (var choice in choices)
@@ -96,17 +109,13 @@
                                 }
                             </ul>
                         </div>
-                        @* <span class="drag-handle" style="font-size: 20px; cursor: grab;">&#9776;</span> <!-- Drag handle --> *@
                     </div>
                 }
             </div>
+            <form id="generate-pdf-form" method="post" asp-page-handler="GeneratePdf">
+                <!-- 其他表单输入字段 -->
+                <button id="generate-pdf-btn" type="submit">Generate PDF</button>
             </form>
-            <form method="get">
-                <button type="submit" class="btn btn-info waves-effect waves-light" asp-page-handler="QuestionsToPDF">
-                    <span class="btn-label"><i class="mdi mdi-export"></i></span>Export to Pdf
-                </button>
-            </form>
-              
         </div>
 
     </div>

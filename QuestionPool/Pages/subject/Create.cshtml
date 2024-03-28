@@ -46,9 +46,9 @@
         </div>
         <!-- end page title -->
         @* Create start*@
-        <h4><b>Create New Subject</b></h4>
+        <h4 style="text-align:center"><b>Create New Subject</b></h4>
         <hr />
-        <div class="row">
+        <div class="row justify-content-center">
             <div class="col-lg-7">
                 <div class="card">
                     <div class="card-body">
@@ -80,9 +80,9 @@
                                 </select>
                                 <span asp-validation-for="Subjects.Status" class="text-danger"></span>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" style="text-align: center;">
                                 <button type="submit" class="btn w-sm btn-success waves-effect" style="margin-right:15px">Create</button>
-                                <a asp-action="Index" class="btn btn-blue waves-effect waves-light">Back to List</a>
+                                <a asp-page="Index" class="btn btn-blue waves-effect waves-light">Back to List</a>
                             </div>
 
                         </form>

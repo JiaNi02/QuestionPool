@@ -34,7 +34,7 @@
     <link href="~/assets/libs/dropzone/min/dropzone.min.css" rel="stylesheet" type="text/css" />
     <link href="~/assets/libs/quill/quill.core.css" rel="stylesheet" type="text/css" />
     <link href="~/assets/libs/quill/quill.snow.css" rel="stylesheet" type="text/css" />
-    <script src="https://cdn.tiny.cloud/1/i0wlzeqbdu2uistzjyp12246lo9qdf1x4uhmy31eh4mrqb8i/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="https://cdn.tiny.cloud/1/i0wlzeqbdu2uistzjyp12246lo9qdf1x4uhmy31eh4mrqb8i/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
 </head>
 <body>
     <div class="content">
@@ -76,7 +76,7 @@
                             </div>
                             <div class="mb-3">
                                 <label asp-for="Question.Questions" class="form-label"></label>
-                                <input asp-for="Question.Questions" class="form-control" id="tiny"/>
+                                <input asp-for="Question.Questions" class="form-control" id="default"/>
                                 <span asp-validation-for="Question.Questions" class="text-danger"></span>
 
                             </div>                               
@@ -140,8 +140,8 @@
                 image.src = URL.createObjectURL(event.target.files[0]);
             };
             tinymce.init({
-                selector: '#tiny',
-                plugins: 'advtable powerpaste autolink advcode visualblocks visualchars image link media mediaembed table charmap pagebreak nonbreaking anchor insertdatetime advlist lists checklist wordcount tinymcespellchecker editimage help formatpainter charmap linkchecker',
+                selector: '#default',
+                plugins: 'autolink  visualblocks visualchars image link media  table charmap pagebreak nonbreaking anchor insertdatetime advlist lists  wordcount  help  charmap linkchecker',
                 toolbar: 'undo redo spellcheckdialog formatpainter | fontfamily fontsize | bold italic underline forecolor backcolor | link image | alignleft aligncenter alignright alignjustify lineheight | checklist bullist numlist indent outdent | removeformat',
                 height: '300px'
                 

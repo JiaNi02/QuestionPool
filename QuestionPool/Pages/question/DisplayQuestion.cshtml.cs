@@ -14,6 +14,8 @@ using System.Drawing;
 using System.Xml.Linq;
 using System.Text;
 using iText.Html2pdf;
+using Newtonsoft.Json.Linq;
+using System.Text.RegularExpressions;
 
 
 namespace QuestionPool.Pages.question
@@ -32,80 +34,70 @@ namespace QuestionPool.Pages.question
 
 
         public async Task<IActionResult> OnGetAsync(string selectedQuestions)
+    {
+        if (!string.IsNullOrEmpty(selectedQuestions))
         {
-            if (!string.IsNullOrEmpty(selectedQuestions))
-            {
-                var questionIds = selectedQuestions.Split(',').Select(int.Parse).ToList();
-                Questions = await _context.Question
-                    .Include(q => q.QuestionAnswer)
-                    .Where(q => questionIds.Contains(q.Id))
-                    .ToListAsync();
+            var questionIds = selectedQuestions.Split(',').Select(int.Parse).ToList();
+            // Fetch only the questions displayed on the page
+            Questions = await _context.Question
+                .Include(q => q.QuestionAnswer)
+                .Where(q => questionIds.Contains(q.Id))
+                .ToListAsync();
 
-                return Page();
-
-            }
-            else
-            {
-                // Handle case where no questions are selected
-                return RedirectToPage("/Questionbank"); // Redirect back to Questionbank page
-            }
+            return Page();
 
         }
-
-        public async Task<IActionResult> OnPostGeneratePdfAsync()
+        else
         {
-            MemoryStream ms = new MemoryStream();
 
-            PdfWriter writer = new PdfWriter(ms);
-            PdfDocument pdfDoc = new PdfDocument(writer);
-            Document document = new Document(pdfDoc, PageSize.A4, false);
-            writer.SetCloseStream(false);
-
-            foreach (var question in Questions)
-            {
-                Paragraph questionParagraph = new Paragraph()
-                    .SetTextAlignment(TextAlignment.LEFT)
-                    .SetFontSize(12)
-                    .Add(new Text($"{question.QuestionNumber}. {question.Name}\n"))
-                    .Add(new Text($"{question.Questions}\n"));
-
-                // Add choices
-                var choices = question.Choice.Trim('[', ']').Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (var choice in choices)
-                {
-                    var formattedChoice = choice.Replace("\"", "").Trim();
-                    questionParagraph.Add(new Text($"- {formattedChoice}\n"));
-                }
-
-                questionParagraph.Add(new Text("\n"));
-
-                document.Add(questionParagraph);
+                return RedirectToPage("/Questionbank");
             }
 
-            // Page Numbers
-            int n = pdfDoc.GetNumberOfPages();
-            for (int i = 1; i <= n; i++)
-            {
-                document.ShowTextAligned(new Paragraph(String
-                    .Format("Page " + i + " of " + n)),
-                    559, 806, i, TextAlignment.RIGHT,
-                    VerticalAlignment.TOP, 0);
-            }
-
-            document.Close();
-            byte[] byteInfo = ms.ToArray();
-            ms.Write(byteInfo, 0, byteInfo.Length);
-            ms.Position = 0;
-
-            FileStreamResult fileStreamResult = new FileStreamResult(ms, "application/pdf");
-
-            // Uncomment this to return the file as a download
-            // fileStreamResult.FileDownloadName = "GeneratedQuestions.pdf";
-
-            return fileStreamResult;
-        }
     }
- }
+
+        public void ConvertHtmlToPdf(string htmlContent, string pdfFilePath)
+        {
+            using (var writer = new PdfWriter(pdfFilePath))
+            {
+                using (var pdf = new PdfDocument(writer))
+                {
+                    ConverterProperties props = new ConverterProperties();
+                    HtmlConverter.ConvertToPdf(htmlContent, pdf, props);
+                }
+            }
+        }
+
+
+        //export function
+        public FileStreamResult OnPostExportToPdfAsync(string html)
+        {
+
+            var stream = new MemoryStream();
+
+            using (var writer = new PdfWriter(stream))
+            {
+                using (var pdf = new PdfDocument(writer))
+                {
+                    writer.SetCloseStream(false); // Prevent the writer from closing the stream
+                    ConverterProperties props = new ConverterProperties();
+                    HtmlConverter.ConvertToPdf(html, pdf, props);
+                }
+            }
+
+            stream.Position = 0; // Reset the stream position for reading
+
+            return new FileStreamResult(stream, "application/pdf")
+            {
+                FileDownloadName = "ExamPaper.pdf"
+            };
+        }
+
+    }
+
+}
+
+
+
 
 
 

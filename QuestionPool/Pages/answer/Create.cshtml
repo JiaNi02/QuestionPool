@@ -26,7 +26,7 @@
                 </div>
             </div>
             <!-- end page title -->
-            <form method="post">
+            <form method="post" enctype="multipart/form-data" action="/answer/Create">
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
@@ -46,13 +46,11 @@
                             </div>
 
                             <div class="col-lg-6">
-                                <form method="post" enctype="multipart/form-data">
-                                    <div class="mb-3">
+                                    <div class="form-group">
                                         <label asp-for="QuestionAnswer.Image" class="control-label"></label>
-                                        <input asp-for="QuestionAnswer.Image" class="form-control" type="file" accept="image/*" />
-                                        <span asp-validation-for="QuestionAnswer.Image" class="text-danger"></span>
+                                    <input asp-for="QuestionAnswer.Image" name="image" type="file" class="form-control" />
                                     </div>
-                                </form>
+
                                 <div id="dropdownSection" class="mb-3">
                                     <select id="dropdownChoice" class="form-control">
                                         <option value="">Please select an option</option>

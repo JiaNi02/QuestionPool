@@ -21,6 +21,7 @@
 
     <!-- Icons css -->
     <link href="~/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+
 </head>
 <div class="content">
 
@@ -52,6 +53,7 @@
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-body">
+                        <div class="table-responsive">
                             <table data-toggle="table" data-sort-name="id" data-page-list="[5, 10, 20]" data-page-size="5"
                                    data-buttons-class="xs btn-light" data-pagination="true" data-show-pagination-switch="true"
                                    class="table-borderless">
@@ -81,7 +83,10 @@
                                         </td>
                                             <td>@Html.DisplayFor(modelItem => item.Name)</td>
                                             <td>@Html.Raw(item.Questions)</td>
-                                            <td>@Html.DisplayFor(modelItem => item.Choice)</td>
+                                            <td class="choice">
+                                                <span class="collapsed-content">@Html.DisplayFor(modelItem => item.Choice)</span>
+                                                <a href="#" class="expand-button">Show Choice</a>
+                                            </td>
                                             <td>@Html.DisplayFor(modelItem => item.Mark)</td>
                                             <td>@Html.DisplayFor(modelItem => item.Image)</td>
                                             <td>@Html.DisplayFor(modelItem => item.ExamType.Name)</td>
@@ -104,7 +109,7 @@
                                                 </td>
                                             <td>
                                                 <div class="btn-group">
-                                                <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"> Action <i class="mdi mdi-chevron-down"></i> </button>
+                                                <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"> Action </button>
                                                 <div class="dropdown-menu">
                                                     <a asp-page="./Edit" asp-route-id="@item.Id" class="dropdown-item">Edit</a>
                                                     <a asp-page="./Delete" asp-route-id="@item.Id" class="dropdown-item">Delete</a>
@@ -116,6 +121,7 @@
                                             }
                                 </tbody>
                             </table>
+                            </div>
                     </div>
                 </div> <!-- end card-->
             </div> <!-- end col-->
@@ -174,6 +180,16 @@
                     searching: false,
                 });
         });
+            $(document).ready(function () {
+                $(".collapsed-content").hide(); // 初始状态设为关闭
+                $(".expand-button").click(function () {
+                    var content = $(this).prev(".collapsed-content");
+                    content.toggle(); // 切换显示状态
+                    var text = content.is(":visible") ? "Close" : "Show Choice";
+                    $(this).text(text);
+                    return false; // 防止链接跳转
+                });
+            });
 
     </script>
 }

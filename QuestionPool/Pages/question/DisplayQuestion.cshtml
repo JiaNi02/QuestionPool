@@ -46,7 +46,7 @@
             font-size: 14px;
             font-family: Arial, Helvetica, sans-serif;
         }
-        .question-container {
+        .displayquestion-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -62,10 +62,6 @@
             margin-left: 20px;
         }
 
-        .question-marks {
-            margin-left: 120px; /* Adds some space between the question and the marks */
-            white-space: nowrap; /* Prevents the marks from wrapping */
-        }
 
         .question-item {
             cursor: move;
@@ -81,54 +77,95 @@
             ul.answer-choices li::before {
                 content: none; /* 隐藏自定义的 bullet point */
             }
+
+
+        .answer-item {
+            display: flex;
+            align-items: center;
+        }
+
+
+        .answer-content {
+            flex: 1; /* 让 answer-content 占据剩余的空间 */
+        }
     </style>
 </head>
 <body>
     <h1></h1>
-    <div id="question-container" style="background-color: #f8f9fa; border-radius: 10px; padding: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);">
-   @*      <div style="background-color:#38414A; padding: 20px;">
-            <!-- Your question content goes here -->
-        </div> *@
+    <div id="displayquestion-container" style="background-color: #f8f9fa; border-radius: 10px; padding: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);">
         <!-- Content -->
         <div class="col-12">
-            <!-- Questions List -->
+            <!-- Questions and Answers Container -->
+            <div id="questions-answers-container">
+                <!-- Questions List -->
                 <div id="questions-list">
-                @foreach (var question in Model.Questions)
-                {
-                    <div class="question-item" id="listed-question" data-question-id="@question.Id">
-                        <span class="drag-handle" style="font-size: 15px; cursor: grab;">&#9776;</span> <!-- Drag handle -->
-                        <div style="display: inline-block; vertical-align: top;">
-                            <p class="question-title" style="margin-left: 20px;">
-                                <span class="question-number">@question.QuestionNumber.</span>
-                                <span style="font-weight: bold; color: #333;">@Html.Raw(question.Name)</span>
-                                <br />
-                                <span class="question-text">@Html.Raw(question.Questions)</span>
-                                @*  <span class="question-marks">[@question.Mark marks]</span> *@
-                            </p>
-                            <ul class="answer-choices">
-                                @{
-                                    var choices = question.Choice.Trim('[', ']').Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                                    foreach (var choice in choices)
-                                    {
-                                        var formattedChoice = choice.Replace("\"", ""); // Remove quotes
-                                        <li style="list-style:none">@formattedChoice.Trim()</li>
-                                    }
-                                }
-                            </ul>
+                    @foreach (var question in Model.Questions)
+                    {
+                        <div class="question-answer-container" style="display: flex; align-items: center;">
+                            <!-- Question section -->
+                            <div class="col-9 question-container">
+                                <div class="question-item" id="listed-question" data-question-id="@question.Id">
+                                    <span class="drag-handle" style="font-size: 15px; cursor: grab;">&#9776;</span> <!-- Drag handle -->
+                                    <div>
+                                        <p class="question-title" style="margin-left: 20px;">
+                                            <span class="question-number">@question.QuestionNumber.</span>
+                                            <span style="font-weight: bold; color: #333;">@Html.Raw(question.Name)</span>
+                                            <br />
+                                            <span class="question-text">@Html.Raw(question.Questions)</span>
+                                        </p>
+                                        <ul class="answer-choices">
+                                            @{
+                                                var choices = question.Choice.Trim('[', ']').Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                                                foreach (var choice in choices)
+                                                {
+                                                    var formattedChoice = choice.Replace("\"", ""); // Remove quotes
+                                                    <li style="list-style:none">@formattedChoice.Trim()</li>
+                                                }
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Answers Section -->
+                            <div class="col-3 answer-container" style="display: flex; align-items: center;">
+                                <div class="answer-item">
+                                    <div class="answer-content">
+                                        <span class="question-marks">[@question.Mark marks]</span>
+                                        <!-- Answers part -->
+                                        @if (question.QuestionAnswer.Any())
+                                        {
+                                            <ul style="padding-left: 0; margin: 0;">
+                                                @foreach (var answer in question.QuestionAnswer)
+                                                {
+                                                    <li>@answer.Answer</li>
+
+                                                }
+                                            </ul>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                }
+                    }
+                </div>
             </div>
-                <!-- 其他表单输入字段 -->
+        </div>
+                
+        <div style="display: flex;justify-content: space-between;margin-top:20px">
             <form id="pdfForm" method="post" asp-page-handler="ExportToPdf" target="_blank">
-                <button id="exportToPdf" class="btn btn-dark waves-effect waves-light"><i class="mdi mdi-file-pdf-box"></i> Export to PDF</button>
-                <input type="hidden" name="html" id="htmlContent" value="">
+                <button id="exportQuestionsToPdf" class="btn btn-dark waves-effect waves-light" style="height:40px"><i class="mdi mdi-file-pdf-box"></i> Export Questions to PDF</button>
+                <input type="hidden" name="questionsHtml" id="questionsHtml" value="">
             </form>
-
-
+            <form id="pdfFormAnswers" method="post" asp-page-handler="ExportAnswersToPdf" target="_blank">
+                <button id="exportAnswersToPdf" class="btn btn-dark waves-effect waves-light" style="height:40px">
+                    <i class="mdi mdi-file-pdf-box"></i> Export Answers to PDF
+                </button>
+                <input type="hidden" name="answersHtml" id="answersHtml" value="">
+            </form>
         </div>
 
     </div>
+
 </body>
 
 
@@ -136,74 +173,124 @@
 @section scripts {
     
     <script>
-        
         document.addEventListener('DOMContentLoaded', function () {
             var sortable = new Sortable(document.getElementById('questions-list'), {
                 animation: 150,
                 handle: '.drag-handle',
                 onEnd: function (evt) {
-                    // Update the order of questions after rearrangement
-                    var questionIds = [];
-                    var questionElements = document.querySelectorAll('.question-item');
-                    questionElements.forEach(function (element) {
-                        questionIds.push(parseInt(element.dataset.questionId));
+                    // 获取所有问题项
+                    var questionItems = document.querySelectorAll('.question-item');
+
+                    // 遍历问题项，并重新设置问题编号
+                    questionItems.forEach(function (item, index) {
+                        var questionNumberElement = item.querySelector('.question-number');
+                        if (questionNumberElement) {
+                            // 更新问题编号
+                            questionNumberElement.textContent = index + 1 + '.';
+                        }
                     });
-                    // Send the updated order to the server via AJAX or form submission
-                    // You can use Fetch API, jQuery.ajax, or submit a form with updated order
-                    // Example using Fetch API:
-                    fetch('/UpdateQuestionOrder', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ questionIds: questionIds })
-                    })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Network response was not ok');
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            console.log(data); // Handle server response if needed
-                        })
-                        .catch(error => {
-                            console.error('There was a problem with your fetch operation:', error);
-                        });
                 }
             });
         });
-        var questionItems = document.querySelectorAll('.question-item');
-
-        // 为每个问题项元素添加拖放事件监听器
-        questionItems.forEach(function (item, index) {
-            item.addEventListener('dragend', function () {
-                // 获取所有问题项
-                var questionItems = document.querySelectorAll('.question-item');
-
-                // 遍历问题项，并重新设置问题编号
-                questionItems.forEach(function (item, index) {
-                    var questionNumberElement = item.querySelector('.question-number');
-                    if (questionNumberElement) {
-                        // 获取问题编号的实际值（例如，从数据属性中获取）
-                        var questionId = item.dataset.questionId;
-                        var questionNumber = index + 1; // 重新计算问题编号，例如使用索引加 1
-
-                        // 更新问题编号
-                        questionNumberElement.textContent = questionNumber + '.';
-                    }
-                });
-            });
-        });
-
         $(document).ready(function () {
-            $("#exportToPdf").off('click').on('click', function (e) {
-                e.preventDefault(); // Prevent any default button behavior
-                var htmlContent = document.getElementById("questions-list").innerHTML;
-                $("#htmlContent").val(htmlContent);
+            $("#exportQuestionsToPdf").off('click').on('click', function (e) {
+                e.preventDefault();
+                var htmlContent = '';
+                var questionContainers = document.querySelectorAll(".question-container");
+                questionContainers.forEach(function (container) {
+                    htmlContent += container.innerHTML;
+                });
+                $("#questionsHtml").val(htmlContent);
                 $("#pdfForm").submit();
             });
+
+            $("#exportAnswersToPdf").off('click').on('click', function (e) {
+                e.preventDefault();
+                var htmlContent = '<table style="border-collapse: collapse; border: 1px solid black; width: 100%;text-align: center;">'; // Added width styling to the table
+                htmlContent += '<tr><th style="border: 1px solid black;text-align: center;">No</th><th style="border: 1px solid black;text-align: center;">Answer</th><th style="border: 1px solid black;text-align: center;">Mark</th></tr>'; // Table headers with border
+                var answerIndex = 1; // Initial index
+                var answerContainers = document.querySelectorAll(".answer-container");
+                answerContainers.forEach(function (container) {
+                    var answers = container.querySelectorAll("li");
+                    answers.forEach(function (answer) {
+                        var mark = answer.parentElement.parentElement.querySelector(".question-marks").textContent;
+                        // Add answer, mark, and index to table row with border
+                        htmlContent += '<tr><td style="border: 1px solid black;">' + answerIndex + '</td><td style="border: 1px solid black;">' + answer.innerHTML + '</td><td style="border: 1px solid black;">' + mark + '</td></tr>';
+                        answerIndex++;
+                    });
+                });
+                htmlContent += '</table>';
+                $("#answersHtml").val(htmlContent);
+                $("#pdfFormAnswers").submit();
+            });
         });
+        // document.addEventListener('DOMContentLoaded', function () {
+        //     var sortable = new Sortable(document.getElementById('questions-list'), {
+        //         animation: 150,
+        //         handle: '.drag-handle',
+        //         onEnd: function (evt) {
+        //             // Update the order of questions after rearrangement
+        //             var questionIds = [];
+        //             var questionElements = document.querySelectorAll('.question-item');
+        //             questionElements.forEach(function (element) {
+        //                 questionIds.push(parseInt(element.dataset.questionId));
+        //             });
+        //             // Send the updated order to the server via AJAX or form submission
+        //             // You can use Fetch API, jQuery.ajax, or submit a form with updated order
+        //             // Example using Fetch API:
+        //             fetch('/UpdateQuestionOrder', {
+        //                 method: 'POST',
+        //                 headers: {
+        //                     'Content-Type': 'application/json'
+        //                 },
+        //                 body: JSON.stringify({ questionIds: questionIds })
+        //             })
+        //                 .then(response => {
+        //                     if (!response.ok) {
+        //                         throw new Error('Network response was not ok');
+        //                     }
+        //                     return response.json();
+        //                 })
+        //                 .then(data => {
+        //                     console.log(data); // Handle server response if needed
+        //                 })
+        //                 .catch(error => {
+        //                     console.error('There was a problem with your fetch operation:', error);
+        //                 });
+        //         }
+        //     });
+        // });
+        // var questionItems = document.querySelectorAll('.question-item');
+
+        // // 为每个问题项元素添加拖放事件监听器
+        // questionItems.forEach(function (item, index) {
+        //     item.addEventListener('dragend', function () {
+        //         // 获取所有问题项
+        //         var questionItems = document.querySelectorAll('.question-item');
+
+        //         // 遍历问题项，并重新设置问题编号
+        //         questionItems.forEach(function (item, index) {
+        //             var questionNumberElement = item.querySelector('.question-number');
+        //             if (questionNumberElement) {
+        //                 // 获取问题编号的实际值（例如，从数据属性中获取）
+        //                 var questionId = item.dataset.questionId;
+        //                 var questionNumber = index + 1; // 重新计算问题编号，例如使用索引加 1
+
+        //                 // 更新问题编号
+        //                 questionNumberElement.textContent = questionNumber + '.';
+        //             }
+        //         });
+        //     });
+        // });
+
+        // $(document).ready(function () {
+        //     $("#exportToPdf").off('click').on('click', function (e) {
+        //         e.preventDefault(); // Prevent any default button behavior
+        //         var htmlContent = document.getElementById("questions-list").innerHTML;
+        //         $("#htmlContent").val(htmlContent);
+        //         $("#pdfForm").submit();
+        //     });
+        // });
 
 
 

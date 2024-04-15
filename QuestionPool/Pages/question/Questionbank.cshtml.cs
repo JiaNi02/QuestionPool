@@ -25,6 +25,7 @@ namespace QuestionPool.Pages.question
 
                 Questions = await _context.Question
                     .Include(q => q.QuestionAnswer)
+                    .Include(q => q.ExamType)
                     .Where(q => q.SubjectId.GetValueOrDefault().ToString() == selectedSubjectId)
                     .ToListAsync();
             }

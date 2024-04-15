@@ -65,9 +65,11 @@
                                 <th data-field="questionnumber" data-sortable="true">No.</th>
                                 <th data-field="name" data-sortable="true">Name</th>
                                 <th data-field="text" data-sortable="true" data-formatter="dateFormatter">Question</th>
-                                <th data-field="amount" data-align="center" data-sortable="true">Chioce</th>
+                                <th data-field="amount" data-sortable="true">Chioce</th>
                                 <th data-field="status" data-align="center" data-sortable="true">Mark</th>
+                                <th data-field="type" data-sortable="true">ExamType</th>
                                 <th data-sortable="true" data-align="center">Answer</th>
+
                             </tr>
                         </thead>
                         <tbody>
@@ -80,6 +82,7 @@
                                             <td class="question">@Html.Raw(item.Questions)</td>
                                             <td class="choice">@Html.DisplayFor(modelItem => item.Choice)</td>
                                             <td class ="mark">@Html.DisplayFor(modelItem => item.Mark)</td>
+                                            <td class="type">@Html.DisplayFor(modelItem => item.ExamType.Name)</td>
                                             <td class="answer">
                                                 @if (item.QuestionAnswer.Any())
                                                 {

@@ -41,6 +41,7 @@ namespace QuestionPool.Pages.question
             // Fetch only the questions displayed on the page
             Questions = await _context.Question
                 .Include(q => q.QuestionAnswer)
+                .Include(q => q.ExamType)
                 .Where(q => questionIds.Contains(q.Id))
                 .ToListAsync();
 
@@ -69,7 +70,7 @@ namespace QuestionPool.Pages.question
 
 
         //export function
-        public FileStreamResult OnPostExportToPdfAsync(string html)
+        public FileStreamResult OnPostExportToPdfAsync(string questionsHtml)
         {
 
             var stream = new MemoryStream();
@@ -80,7 +81,7 @@ namespace QuestionPool.Pages.question
                 {
                     writer.SetCloseStream(false); // Prevent the writer from closing the stream
                     ConverterProperties props = new ConverterProperties();
-                    HtmlConverter.ConvertToPdf(html, pdf, props);
+                    HtmlConverter.ConvertToPdf(questionsHtml, pdf, props);
                 }
             }
 
@@ -89,6 +90,27 @@ namespace QuestionPool.Pages.question
             return new FileStreamResult(stream, "application/pdf")
             {
                 FileDownloadName = "ExamPaper.pdf"
+            };
+        }
+        public FileStreamResult OnPostExportAnswersToPdfAsync(string answersHtml)
+        {
+            var stream = new MemoryStream();
+
+            using (var writer = new PdfWriter(stream))
+            {
+                using (var pdf = new PdfDocument(writer))
+                {
+                    writer.SetCloseStream(false); // Prevent the writer from closing the stream
+                    ConverterProperties props = new ConverterProperties();
+                    HtmlConverter.ConvertToPdf(answersHtml, pdf, props);
+                }
+            }
+
+            stream.Position = 0; // Reset the stream position for reading
+
+            return new FileStreamResult(stream, "application/pdf")
+            {
+                FileDownloadName = "ExamAnswers.pdf"
             };
         }
 

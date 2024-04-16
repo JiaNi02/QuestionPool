@@ -123,6 +123,31 @@
 </body>
 <script>
 
+    // document.getElementById('submitButton').addEventListener('click', function () {
+    //     var selectedData = [];
+    //     var checkboxes = document.querySelectorAll('.selectedQuestion:checked');
+
+    //     checkboxes.forEach(function (checkbox) {
+    //         var rowData = {};
+    //         var row = checkbox.closest('tr');
+    //         rowData['id'] = checkbox.value;
+    //         rowData['questionnumber'] = row.querySelector('.questionnumber').textContent.trim();
+    //         rowData['name'] = row.querySelector('.name').textContent.trim();
+    //         rowData['question'] = row.querySelector('.question').textContent.trim();
+    //         rowData['choice'] = row.querySelector('.choice').textContent.trim();
+    //         rowData['mark'] = row.querySelector('.mark').textContent.trim();
+    //         rowData['answer'] = row.querySelector('.answer').textContent.trim();
+    //         selectedData.push(rowData);
+    //     });
+
+    //     var selectedQuestions = selectedData.map(function (data) {
+    //         return data.id;
+    //     });
+    //     var url = '/question/DisplayQuestion?selectedQuestions=' + encodeURIComponent(selectedQuestions.join(','));
+
+    //     // 重定向到 DisplayQuestion 页面
+    //     window.location.href = url; // Submit the form after collecting all data
+    // });
     document.getElementById('submitButton').addEventListener('click', function () {
         var selectedData = [];
         var checkboxes = document.querySelectorAll('.selectedQuestion:checked');
@@ -136,6 +161,7 @@
             rowData['question'] = row.querySelector('.question').textContent.trim();
             rowData['choice'] = row.querySelector('.choice').textContent.trim();
             rowData['mark'] = row.querySelector('.mark').textContent.trim();
+            rowData['type'] = row.querySelector('.type').textContent.trim();
             rowData['answer'] = row.querySelector('.answer').textContent.trim();
             selectedData.push(rowData);
         });
@@ -143,25 +169,24 @@
         var selectedQuestions = selectedData.map(function (data) {
             return data.id;
         });
-        var url = '/question/DisplayQuestion?selectedQuestions=' + encodeURIComponent(selectedQuestions.join(','));
 
-        // 重定向到 DisplayQuestion 页面
-        window.location.href = url; // Submit the form after collecting all data
+        // 构建下一个页面的URL
+        var url;
+        // 检查第一个选中的问题的考试类型
+        var firstQuestionType = selectedData.length > 0 ? selectedData[0].type : '';
+        if (firstQuestionType === 'Objective Question') {
+            url = '/question/DisplayQuestion?selectedQuestions=' + encodeURIComponent(selectedQuestions.join(','));
+        } else if (firstQuestionType === 'Subjective Question') {
+            url = '/question/DisplaySubjectiveQuestion?selectedQuestions=' + encodeURIComponent(selectedQuestions.join(','));
+        } else {
+            // 如果无法确定考试类型，默认导航回题库页面
+            url = '/subject/ChooseSubject';
+        }
+
+        // 重定向到相应的页面
+        window.location.href = url;
     });
-   
-    // Listen for change events on checkboxes within the table
-    // $('input[type="checkbox"]').change(function ()) {
-    //     if ($('input[type="checkbox"]:checked').length > 0) {
-    //         $('#exportButton').prop('disabled', false);
-    //     } else {
-    //         $('#exportButton').prop('disabled', true);
-    //     }
-    // });
 
-    // // Handle button click event
-    // $('#exportButton').on('click', function () {
-    //     alert('Export button clicked!');
-    // });
 </script>
 <!-- Vendor js -->
 <script src="~/assets/js/vendor.min.js"></script>

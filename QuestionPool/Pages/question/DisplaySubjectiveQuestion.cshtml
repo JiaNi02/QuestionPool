@@ -1,8 +1,6 @@
 ﻿@page
 @using QuestionPool.Models
-@using System.Text.Json
-@using System.Text.Json.Serialization
-@model QuestionPool.Pages.question.DisplayQuestionModel
+@model QuestionPool.Pages.question.DisplaySubjectiveQuestionModel
 @{
 }
 <head>
@@ -46,34 +44,36 @@
             font-size: 14px;
             font-family: Arial, Helvetica, sans-serif;
         }
+
         .displayquestion-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        .question-number{
+
+        .question-number {
             font-weight: bold;
             color: darkblue;
         }
 
-        .question-container{
-            border-right:1px solid;
-        }
+
+
 
         .question-item {
             cursor: move;
             border-bottom: 1px solid #dee2e6;
             padding: 10px; /* Change cursor to indicate draggable */
-            font-size:14px;
+            font-size: 14px;
         }
 
         ul.answer-choices {
             list-style: none; /* 移除默认的 bullet point 样式 */
         }
 
-        ul.answer-choices li::before {
+            ul.answer-choices li::before {
                 content: none; /* 隐藏自定义的 bullet point */
-        }
+            }
+
 
         .answer-item {
             display: flex;
@@ -84,12 +84,36 @@
         .answer-content {
             flex: 1; /* 让 answer-content 占据剩余的空间 */
         }
+
+        .question-container {
+            border-right:1px solid;
+        }
+/*         .question-mark-container {
+            display: flex;
+            align-items: center;
+            margin-left: 150px;
+            margin-top:80px;
+            margin-right:30px
+        } */
+
+
+         /*    .question-mark-container::before {
+                content: '';
+                flex: 1;
+                border-top: 2px dashed #ccc; 
+                margin-right: 10px; 
+            } */
+
+        .question-marks {
+            font-weight: bold;
+            color: #333;
+        }
     </style>
 </head>
 <body>
     <h1></h1>
     <div id="displayquestion-container" style="background-color: #f8f9fa; border-radius: 10px; padding: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);">
-        <!-- Content -->
+
         <div class="col-12">
             <!-- Questions and Answers Container -->
             <div id="questions-answers-container">
@@ -98,36 +122,29 @@
                     @foreach (var question in Model.Questions)
                     {
                         <div class="question-answer-container" style="display: flex; align-items: center;">
-                            <!-- Question section -->
+                         
                             <div class="col-10 question-container">
                                 <div class="question-item" id="listed-question" data-question-id="@question.Id">
-                                    <span class="drag-handle" style="font-size: 15px; cursor: grab;">&#9776;</span> <!-- Drag handle -->
+                                    <span class="drag-handle" style="font-size: 15px; cursor: grab;">&#9776;</span> @* <!-- Drag handle --> *@
                                     <div>
                                         <p class="question-title" style="margin-left: 20px;">
                                             <span class="question-number">@question.QuestionNumber.</span>
-                                            <span style="font-weight: bold; color: #333;">@Html.Raw(question.Name)</span>
+                                            <span style="font-weight: bold; color: #333; margin-left: 5px;">@Html.Raw(question.Name)</span>
                                             <br />
                                             <div class="question-text" style="margin-left: 40px;">@Html.Raw(question.Questions)</div>
                                         </p>
-                                        <ul class="answer-choices">
-                                            @{
-                                                var choices = question.Choice.Trim('[', ']').Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                                                foreach (var choice in choices)
-                                                {
-                                                    var formattedChoice = choice.Replace("\"", ""); // Remove quotes
-                                                    <li style="list-style:none">@formattedChoice.Trim()</li>
-                                                }
-                                            }
-                                        </ul>
+                                        <div class="question-mark-container" style="display: flex;align-items: center;margin-top:100px;justify-content:end">
+                                            <div class="dashed-line" style="flex: 1;max-width: 140px; border-top: 2px dashed #ccc;margin-right: 10px;"></div>
+                                            <span class="question-marks">@question.Mark marks</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <!-- Answers Section -->
+                            @* <!-- Answers Section --> *@
                             <div class="col-2 answer-container" style="display: flex; align-items: center;justify-content:center">
                                 <div class="answer-item">
                                     <div class="answer-content">
-                                        <span class="question-marks">[@question.Mark marks]</span>
-                                        <!-- Answers part -->
+                                       @*  <!-- Answers part --> *@
                                         @if (question.QuestionAnswer.Any())
                                         {
                                             <ul style="padding-left: 40px; margin: 0;">
@@ -146,7 +163,7 @@
                 </div>
             </div>
         </div>
-                
+
         <div style="display: flex;justify-content: space-between;margin-top:20px">
             <form id="pdfForm" method="post" asp-page-handler="ExportToPdf" target="_blank">
                 <button id="exportQuestionsToPdf" class="btn btn-dark waves-effect waves-light" style="height:40px"><i class="mdi mdi-file-pdf-box"></i> Export Questions to PDF</button>
@@ -165,9 +182,8 @@
 </body>
 
 
-
 @section scripts {
-    
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var sortable = new Sortable(document.getElementById('questions-list'), {
@@ -205,94 +221,24 @@
                 var htmlContent = '<table style="border-collapse: collapse; border: 1px solid black; width: 100%;text-align: center;">'; // Added width styling to the table
                 htmlContent += '<tr><th style="border: 1px solid black;text-align: center;">No</th><th style="border: 1px solid black;text-align: center;">Answer</th><th style="border: 1px solid black;text-align: center;">Mark</th></tr>'; // Table headers with border
                 var answerIndex = 1; // Initial index
-                var answerContainers = document.querySelectorAll(".answer-container");
-                answerContainers.forEach(function (container) {
-                    var answers = container.querySelectorAll("li");
-                    answers.forEach(function (answer) {
-                        var mark = answer.parentElement.parentElement.querySelector(".question-marks").textContent;
-                        // Add answer, mark, and index to table row with border
-                        htmlContent += '<tr><td style="border: 1px solid black;">' + answerIndex + '</td><td style="border: 1px solid black;">' + answer.innerHTML + '</td><td style="border: 1px solid black;">' + mark + '</td></tr>';
-                        answerIndex++;
-                    });
+
+                // 获取所有的 question-container
+                var questionContainers = document.querySelectorAll(".question-container");
+                questionContainers.forEach(function (container) {
+                    var answer = container.nextElementSibling.querySelector(".answer-content ul").innerHTML; // 获取 answer
+                    var mark = container.querySelector(".question-mark-container .question-marks").textContent; // 获取 mark
+
+                    // 添加 answer、mark 和 index 到带有边框的表格行中
+                    htmlContent += '<tr><td style="border: 1px solid black;">' + answerIndex + '</td><td style="border: 1px solid black;">' + answer + '</td><td style="border: 1px solid black;">' + mark + '</td></tr>';
+                    answerIndex++;
                 });
                 htmlContent += '</table>';
                 $("#answersHtml").val(htmlContent);
                 $("#pdfFormAnswers").submit();
             });
+
         });
-        // document.addEventListener('DOMContentLoaded', function () {
-        //     var sortable = new Sortable(document.getElementById('questions-list'), {
-        //         animation: 150,
-        //         handle: '.drag-handle',
-        //         onEnd: function (evt) {
-        //             // Update the order of questions after rearrangement
-        //             var questionIds = [];
-        //             var questionElements = document.querySelectorAll('.question-item');
-        //             questionElements.forEach(function (element) {
-        //                 questionIds.push(parseInt(element.dataset.questionId));
-        //             });
-        //             // Send the updated order to the server via AJAX or form submission
-        //             // You can use Fetch API, jQuery.ajax, or submit a form with updated order
-        //             // Example using Fetch API:
-        //             fetch('/UpdateQuestionOrder', {
-        //                 method: 'POST',
-        //                 headers: {
-        //                     'Content-Type': 'application/json'
-        //                 },
-        //                 body: JSON.stringify({ questionIds: questionIds })
-        //             })
-        //                 .then(response => {
-        //                     if (!response.ok) {
-        //                         throw new Error('Network response was not ok');
-        //                     }
-        //                     return response.json();
-        //                 })
-        //                 .then(data => {
-        //                     console.log(data); // Handle server response if needed
-        //                 })
-        //                 .catch(error => {
-        //                     console.error('There was a problem with your fetch operation:', error);
-        //                 });
-        //         }
-        //     });
-        // });
-        // var questionItems = document.querySelectorAll('.question-item');
 
-        // // 为每个问题项元素添加拖放事件监听器
-        // questionItems.forEach(function (item, index) {
-        //     item.addEventListener('dragend', function () {
-        //         // 获取所有问题项
-        //         var questionItems = document.querySelectorAll('.question-item');
-
-        //         // 遍历问题项，并重新设置问题编号
-        //         questionItems.forEach(function (item, index) {
-        //             var questionNumberElement = item.querySelector('.question-number');
-        //             if (questionNumberElement) {
-        //                 // 获取问题编号的实际值（例如，从数据属性中获取）
-        //                 var questionId = item.dataset.questionId;
-        //                 var questionNumber = index + 1; // 重新计算问题编号，例如使用索引加 1
-
-        //                 // 更新问题编号
-        //                 questionNumberElement.textContent = questionNumber + '.';
-        //             }
-        //         });
-        //     });
-        // });
-
-        // $(document).ready(function () {
-        //     $("#exportToPdf").off('click').on('click', function (e) {
-        //         e.preventDefault(); // Prevent any default button behavior
-        //         var htmlContent = document.getElementById("questions-list").innerHTML;
-        //         $("#htmlContent").val(htmlContent);
-        //         $("#pdfForm").submit();
-        //     });
-        // });
-
-
-
-
-
-        
     </script>
 }
 <!-- Vendor js -->
@@ -302,4 +248,3 @@
 
 <!-- Init js-->
 <script src="~/assets/js/pages/form-quilljs.init.js"></script>
-

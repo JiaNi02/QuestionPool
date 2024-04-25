@@ -5,6 +5,7 @@ using System.IO;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.AspNetCore.Builder;
+using QuestionPool;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
@@ -27,7 +28,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
     options.SlidingExpiration = true;
 });
-
+builder.Services.AddScoped<IFileStorageHelper, LocalFileStorageHelper>();
 // Add services to the container.
 builder.Services.AddRazorPages();
 

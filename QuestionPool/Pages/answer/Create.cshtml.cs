@@ -22,56 +22,56 @@ namespace QuestionPool.Pages.answer
             _hostingEnvironment = hostingEnvironment;
         }
 
+        [BindProperty]
+        public IFormFile Image { get; set; }
         public IActionResult OnGet()
         {
-        ViewData["QuestionId"] = new SelectList(_context.Question, "Id", "Name");
+            ViewData["QuestionId"] = new SelectList(_context.Question, "Id", "Name");
             return Page();
         }
 
         [BindProperty]
         public QuestionAnswer QuestionAnswer { get; set; } = new QuestionAnswer();
 
-        public async Task<IActionResult> OnPostUploadImageAsync(IFormFile image)
-        {
-            // 检查是否上传了文件
-            if (image != null)
-            {
-                // 生成文件名
-                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
-                // 文件保存路径
-                var filePath = Path.Combine(_hostingEnvironment.WebRootPath, "uploads", fileName);
-
-                // 保存文件到指定路径
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await image.CopyToAsync(stream);
-                }
-
-                // 将文件名保存到 QuestionAnswer 对象中
-                QuestionAnswer.Image = fileName;
-
-                // 调用 OnPostAsync 方法保存 QuestionAnswer 对象到数据库
-                return await OnPostAsync();
-            }
-
-            // 如果没有上传文件，返回错误消息
-            return new JsonResult(new { success = false, message = "No file uploaded" });
-        }
-
-
-
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(QuestionAnswer questionAnswer)
         {
+            if (Image != null)
+            {
+                if (questionAnswer.Image != null)
+                {
+                    string filePath = Path.Combine(_hostingEnvironment.WebRootPath, "uploads", questionAnswer.Image);
+                    System.IO.File.Delete(filePath);
+                }
+                questionAnswer.Image = ProcessUploadFile();
+            }
             if (!ModelState.IsValid || QuestionAnswer == null)
             {
                 return Page();
             }
-
             _context.QuestionAnswer.Add(QuestionAnswer);
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");
+
+
+        }
+        private string ProcessUploadFile()
+        {
+            string uniqueFileName = null;
+
+            if (Image != null)
+            {
+                string uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "uploads");
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + Image.FileName;
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    Image.CopyTo(fileStream);
+                }
+            }
+
+            return uniqueFileName;
         }
 
     }

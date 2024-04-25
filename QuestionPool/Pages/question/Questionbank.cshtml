@@ -54,14 +54,14 @@
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-body">
-                            <form id="sortingForm" method="post" asp-page-handler="Submit">
+                        <form id="sortingForm" method="post" asp-page-handler="Submit">
                           <table id="demo-custom-toolbar" class="table-border" data-toggle="table" data-toolbar="#demo-delete-row" data-search="true"
                            data-show-refresh="true" data-show-columns="true" data-sort-name="id" data-page-list="[5, 10, 20]"
                            data-page-size="5" data-pagination="true" data-show-pagination-switch="true">
                         <thead class="table-light">
                             <tr>
 
-                                 <th><input type="checkbox" id="selectAll" /></th>
+                                <th><input type="checkbox" id="selectAll"/></th>
                                 <th data-field="questionnumber" data-sortable="true">No.</th>
                                 <th data-field="name" data-sortable="true">Name</th>
                                 <th data-field="text" data-sortable="true" data-formatter="dateFormatter">Question</th>
@@ -123,31 +123,36 @@
 </body>
 <script>
 
-    // document.getElementById('submitButton').addEventListener('click', function () {
-    //     var selectedData = [];
-    //     var checkboxes = document.querySelectorAll('.selectedQuestion:checked');
+    document.addEventListener("DOMContentLoaded", function () {
+        var selectedQuestions = JSON.parse(localStorage.getItem("selectedQuestions")) || {};
 
-    //     checkboxes.forEach(function (checkbox) {
-    //         var rowData = {};
-    //         var row = checkbox.closest('tr');
-    //         rowData['id'] = checkbox.value;
-    //         rowData['questionnumber'] = row.querySelector('.questionnumber').textContent.trim();
-    //         rowData['name'] = row.querySelector('.name').textContent.trim();
-    //         rowData['question'] = row.querySelector('.question').textContent.trim();
-    //         rowData['choice'] = row.querySelector('.choice').textContent.trim();
-    //         rowData['mark'] = row.querySelector('.mark').textContent.trim();
-    //         rowData['answer'] = row.querySelector('.answer').textContent.trim();
-    //         selectedData.push(rowData);
-    //     });
+        var checkboxes = document.querySelectorAll(".selectedQuestion");
 
-    //     var selectedQuestions = selectedData.map(function (data) {
-    //         return data.id;
-    //     });
-    //     var url = '/question/DisplayQuestion?selectedQuestions=' + encodeURIComponent(selectedQuestions.join(','));
+        checkboxes.forEach(function (checkbox) {
+            var questionId = checkbox.value;
+            checkbox.checked = selectedQuestions[questionId] || false;
 
-    //     // 重定向到 DisplayQuestion 页面
-    //     window.location.href = url; // Submit the form after collecting all data
-    // });
+            checkbox.addEventListener("change", function () {
+                if (checkbox.checked) {
+                    selectedQuestions[questionId] = true;
+                } else {
+                    delete selectedQuestions[questionId];
+                }
+
+                localStorage.setItem("selectedQuestions", JSON.stringify(selectedQuestions));
+            });
+        });
+    });
+    document.addEventListener("DOMContentLoaded", function () {
+        var selectAllCheckbox = document.getElementById("selectAll");
+        var checkboxes = document.querySelectorAll(".selectedQuestion");
+
+        selectAllCheckbox.addEventListener("click", function () {
+            checkboxes.forEach(function (checkbox) {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+        });
+    });
     document.getElementById('submitButton').addEventListener('click', function () {
         var selectedData = [];
         var checkboxes = document.querySelectorAll('.selectedQuestion:checked');
@@ -186,6 +191,7 @@
         // 重定向到相应的页面
         window.location.href = url;
     });
+
 
 </script>
 <!-- Vendor js -->

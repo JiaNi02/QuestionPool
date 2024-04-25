@@ -21,7 +21,11 @@
 
     <!-- Icons css -->
     <link href="~/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
-
+    <style>
+        .bootstrap-table .fixed-table-toolbar {
+            float: left;
+        }
+    </style>
 </head>
 <div class="content">
 
@@ -54,22 +58,22 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table data-toggle="table" data-sort-name="id" data-page-list="[5, 10, 20]" data-page-size="5"
-                                   data-buttons-class="xs btn-light" data-pagination="true" data-show-pagination-switch="true"
-                                   class="table-borderless">
+                            <table id="demo-custom-toolbar" class="table-border" data-toggle="table" data-toolbar="#demo-delete-row" data-toolbar-align="left" data-search="true"
+                                   data-show-refresh="true" data-show-columns="true" data-sort-name="id" data-page-list="[5,10,15,20]"
+                                   data-page-size="5" data-pagination="true" data-show-pagination-switch="true">
                                 <thead class="table-light">
                                     <tr>
                                     <th>
                                        No.
                                     </th>
-                                        <th>@Html.DisplayNameFor(model => model.Question[0].Name)</th>
-                                        <th>@Html.DisplayNameFor(model => model.Question[0].Questions)</th>
-                                        <th>@Html.DisplayNameFor(model => model.Question[0].Choice)</th>
+                                        <th data-field="name" data-sortable="true">@Html.DisplayNameFor(model => model.Question[0].Name)</th>
+                                        <th data-field ="questions">@Html.DisplayNameFor(model => model.Question[0].Questions)</th>
+                                        <th data-field="choice">@Html.DisplayNameFor(model => model.Question[0].Choice)</th>
                                         <th data-sortable="true">@Html.DisplayNameFor(model => model.Question[0].Mark)</th>
-                                        <th>@Html.DisplayNameFor(model => model.Question[0].Image)</th>
-                                        <th>@Html.DisplayNameFor(model => model.Question[0].ExamType)</th>
-                                        <th data-sortable="true">@Html.DisplayNameFor(model => model.Question[0].Subject)</th>
-                                        <th data-sortable="true">@Html.DisplayNameFor(model => model.Question[0].Term)</th>
+                                        <th data-field="image">@Html.DisplayNameFor(model => model.Question[0].Image)</th>
+                                        <th data-field="exam type">@Html.DisplayNameFor(model => model.Question[0].ExamType)</th>
+                                        <th data-field="subject" data-sortable="true">@Html.DisplayNameFor(model => model.Question[0].Subject)</th>
+                                        <th data-field="term" data-sortable="true">@Html.DisplayNameFor(model => model.Question[0].Term)</th>
                                         <th>@Html.DisplayNameFor(model => model.QuestionAnswer[0].Answer)</th>
                                         <th>Action</th>
                                     </tr>
@@ -88,7 +92,16 @@
                                                 <a href="#" class="expand-button">Show Choice</a>
                                             </td>
                                             <td>@Html.DisplayFor(modelItem => item.Mark)</td>
-                                            <td>@Html.DisplayFor(modelItem => item.Image)</td>
+                                            <td>
+                                                @if (!string.IsNullOrEmpty(item.Image))
+                                                {
+                                                    <img src="@item.Image" class="img-fluid" />
+                                                }
+                                                else
+                                                {
+                                                    <span>No image available</span>
+                                                }
+                                            </td>
                                             <td>@Html.DisplayFor(modelItem => item.ExamType.Name)</td>
                                             <td>@Html.DisplayFor(modelItem => item.Subject.Name)</td>
                                             <td>@Html.DisplayFor(modelItem => item.Term.Name)</td>
@@ -173,13 +186,7 @@
                 }
             });
         }
-        $(document).ready(function () {
-            // Initialize DataTable
-            $('#dataTable').DataTable(
-                {
-                    searching: false,
-                });
-        });
+
             $(document).ready(function () {
                 $(".collapsed-content").hide(); // 初始状态设为关闭
                 $(".expand-button").click(function () {
@@ -190,7 +197,15 @@
                     return false; // 防止链接跳转
                 });
             });
+        var pageSizes = [5,10,15,20];
 
+        $(document).ready(function () {
+            var pageListHtml = '';
+            $.each(pageSizes, function (index, value) {
+                pageListHtml += '<option value="' + value + '">' + value + '</option>';
+            });
+            $('#demo-custom-toolbar').attr('data-page-list', JSON.stringify(pageSizes));
+        });
     </script>
 }
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>

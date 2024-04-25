@@ -2,6 +2,16 @@
 @using QuestionPool.Models
 @model QuestionPool.Pages.question.DisplaySubjectiveQuestionModel
 @{
+    @functions {
+        // Define the function to check if a question contains sub questions
+        bool questionContainsSubQuestions(dynamic question)
+        {
+            // Add your logic here to check if the question contains sub questions
+            // For example:
+            // return question.Questions.Contains("(a)") || question.Questions.Contains("(b)") || question.Questions.Contains("(c)");
+            return false; // Replace this with your actual logic
+        }
+    }
 }
 <head>
     <!-- plugin css -->
@@ -128,9 +138,13 @@
                                     <span class="drag-handle" style="font-size: 15px; cursor: grab;">&#9776;</span> @* <!-- Drag handle --> *@
                                     <div>
                                         <p class="question-title" style="margin-left: 20px;">
-                                            <span class="question-number">@question.QuestionNumber.</span>
+                                            @if (!question.Questions.Contains("(b)") && !question.Questions.Contains("(c)"))
+                                            {
+                                                <span class="question-number">@Html.Raw(question.QuestionNumber)</span>
+                                            }
                                             <span style="font-weight: bold; color: #333; margin-left: 5px;">@Html.Raw(question.Name)</span>
                                             <br />
+                                            <img src="@question.Image" class="img-fluid">
                                             <div class="question-text" style="margin-left: 40px;">@Html.Raw(question.Questions)</div>
                                         </p>
                                         <div class="question-mark-container" style="display: flex;align-items: center;margin-top:100px;justify-content:end">
@@ -192,13 +206,19 @@
                 onEnd: function (evt) {
                     // 获取所有问题项
                     var questionItems = document.querySelectorAll('.question-item');
+                    var normalQuestionNumber = 1;
 
                     // 遍历问题项，并重新设置问题编号
-                    questionItems.forEach(function (item, index) {
+                    questionItems.forEach(function (item) {
                         var questionNumberElement = item.querySelector('.question-number');
-                        if (questionNumberElement) {
-                            // 更新问题编号
-                            questionNumberElement.textContent = index + 1 + '.';
+                        var isFixed = item.getAttribute('data-fixed'); // 检查题目是否被标记为固定
+
+                        // 如果题目不是固定的，并且不包含 (a), (b), (c)，重新设置普通题目的编号
+                        if (isFixed !== 'true' && !item.textContent.includes('(b)') && !item.textContent.includes('(c)')) {
+                            if (questionNumberElement) {
+                                questionNumberElement.textContent = normalQuestionNumber + '.';
+                                normalQuestionNumber++;
+                            }
                         }
                     });
                 }

@@ -58,7 +58,7 @@
                 </div>
             </div>
             <!-- end page title -->
-            <form method="post">
+            <form method="post" enctype="multipart/form-data">
             <div class="card">
                 <div class="card-body">
                     <div class="row">
@@ -142,9 +142,10 @@
             tinymce.init({
                 selector: '#default',
                 branding: false,
+                elementpath: false,
                 plugins: 'autolink  visualblocks visualchars image link media  table charmap pagebreak nonbreaking anchor insertdatetime advlist lists  wordcount  help  charmap linkchecker',
                 toolbar: 'undo redo spellcheckdialog formatpainter | fontfamily fontsize | bold italic underline forecolor backcolor | link image | alignleft aligncenter alignright alignjustify lineheight | checklist bullist numlist indent outdent | removeformat',
-                height: '300px'
+                height: '400px'
                 
             });
 

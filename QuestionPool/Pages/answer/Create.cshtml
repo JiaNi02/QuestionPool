@@ -1,11 +1,12 @@
 ﻿@page
 @model QuestionPool.Pages.answer.CreateModel
-
 @{
     ViewData["Title"] = "Create";
 }
 <script src="https://cdn.tiny.cloud/1/i0wlzeqbdu2uistzjyp12246lo9qdf1x4uhmy31eh4mrqb8i/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
-<body>
+
+
+
     <div class="content">
 
         <!-- Start Content-->
@@ -27,30 +28,21 @@
             </div>
             <!-- end page title -->
             <form method="post" enctype="multipart/form-data">
+                <input hidden asp-for="QuestionAnswer.Image"/>
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-lg-6">
                                 <!-- Content for the left side -->
-
                                 <div class="mb-3">
                                     <label asp-for="QuestionAnswer.Answer" class="control-label"></label>
-                                     <input asp-for="QuestionAnswer.Answer" class="form-control" type="text" />
+                                    <input asp-for="QuestionAnswer.Answer" class="form-control" type="text" />
                                     <span asp-validation-for="QuestionAnswer.Answer" class="text-danger"></span>
                                 </div>
                                 <div class="mb-3">
                                     <label asp-for="QuestionAnswer.QuestionId" class="control-label"></label>
                                     <select asp-for="QuestionAnswer.QuestionId" class="form-control" asp-items="ViewBag.QuestionId"></select>
                                 </div>
-                                
-                            </div>
-
-                            <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label asp-for="QuestionAnswer.Image" class="control-label"></label>
-                                    <input asp-for="QuestionAnswer.Image" name="image" type="file" class="form-control" />
-                                    </div>
-
                                 <div id="dropdownSection" class="mb-3">
                                     <select id="dropdownChoice" class="form-control">
                                         <option value="">Please select an option</option>
@@ -58,40 +50,33 @@
                                         <option value="hide">Hide Answer's Order Field</option>
                                     </select>
                                 </div>
-                                <div class="mb-3" id="choiceFieldGroup" style="display: none;">
+                                <div id="choiceFieldGroup" class="mb-3" style="display: none;">
                                     <label asp-for="QuestionAnswer.Order" class="control-label"></label>
                                     <input asp-for="QuestionAnswer.Order" class="form-control" />
                                     <span asp-validation-for="QuestionAnswer.Order" class="text-danger"></span>
                                 </div>
+                            </div>
 
-                                <div class="form-group">
-                                    <input type="submit" value="Create" class="btn btn-primary" />
+                            <div class="col-lg-6">
+                                <div class="form-group row">
+                                    <label asp-for="QuestionAnswer.Image" class="control-label"></label>
+                                    <div class="custom-file">
+                                        <input asp-for="QuestionAnswer.Image"  type="file" class="custom-file-input form-control" />
+                                        <label class="custom-file-label">Click here to upload image</label>
+                                    </div>                                    
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- end row -->
+                <!-- end card -->
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
             </form>
 
             <!-- end row -->
         </div> <!-- container -->
-        <script>
-            tinymce.init({
-                selector: '#editor',
-                elementpath: false,
-                branding: false,
-                plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker tinymcespellchecker permanentpen powerpaste advtable advcode editimage advtemplate ai mentions tinycomments tableofcontents footnotes mergetags autocorrect typography inlinecss',
-                toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
-                tinycomments_mode: 'embedded',
-                tinycomments_author: 'Author name',
-                mergetags_list: [
-                    { value: 'First.Name', title: 'First Name' },
-                    { value: 'Email', title: 'Email' },
-                ],
-                ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
-            });
-        </script>
        
     </div> <!-- content -->
     <!-- Vendor js -->
@@ -105,14 +90,21 @@
 
     <!-- Init js-->
     <script src="~/assets/js/pages/form-fileuploads.init.js"></script>
+    @section Scripts {
+        @{
+            <script>
+                $(document).ready(function () {
+                    $('.custom-file-input').on("change", function () {
+                        var fileName = $(this).val().split("\\").pop();
+                        $(this).next('.custom-file-label').html(fileName)
+                    })
+                })
+            </script>
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
 
 
-</body>
-        @section Scripts {
-            @{
-                await Html.RenderPartialAsync("_ValidationScriptsPartial");
-            }
-               <script>
+@*                <script>
                     document.addEventListener("DOMContentLoaded", function () {
                         // Get the select element for dropdown choice
                         var dropdownChoice = document.getElementById("dropdownChoice");
@@ -134,7 +126,7 @@
                             }
                         });
                     });
-                </script>
+                </script> *@
 }
 @* <h1>Create</h1>
 

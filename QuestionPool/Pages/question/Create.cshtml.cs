@@ -6,16 +6,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using QuestionPool.Models;
+using QuestionPool;
 
 namespace QuestionPool.Pages.question
 {
     public class CreateModel : PageModel
     {
         private readonly QuestionPool.Models.QuestionPoolDatabaseContext _context;
+        private readonly IFileStorageHelper _fileStorageHelper;
 
-        public CreateModel(QuestionPool.Models.QuestionPoolDatabaseContext context)
+        public CreateModel(QuestionPool.Models.QuestionPoolDatabaseContext context, IFileStorageHelper fileStorageHelper)
         {
             _context = context;
+            _fileStorageHelper = fileStorageHelper;
         }
 
         public IActionResult OnGet()
@@ -29,14 +32,21 @@ namespace QuestionPool.Pages.question
 
         [BindProperty]
         public Question Question { get; set; } = default!;
-        
 
-        // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
+        [BindProperty]
+        public IFormFile Image { get; set; }
+
         public async Task<IActionResult> OnPostAsync()
         {
-          if (!ModelState.IsValid || _context.Question == null || Question == null)
+
+          //if (!ModelState.IsValid || _context.Question == null || Question == null)
+          //  {
+          //      return Page();
+          //  }
+            if (Image != null && Image.Length > 0)
             {
-                return Page();
+                var imagePath = await _fileStorageHelper.SaveFileAsync(Image, "uploads");
+                Question.Image = imagePath;
             }
 
             _context.Question.Add(Question);

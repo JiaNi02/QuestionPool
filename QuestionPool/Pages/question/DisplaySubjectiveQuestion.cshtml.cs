@@ -10,11 +10,13 @@ namespace QuestionPool.Pages.question
     public class DisplaySubjectiveQuestionModel : PageModel
     {
         private readonly QuestionPoolDatabaseContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public DisplaySubjectiveQuestionModel(QuestionPoolDatabaseContext context)
+        public DisplaySubjectiveQuestionModel(QuestionPoolDatabaseContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
             Questions = new List<Question>();
+            _webHostEnvironment = webHostEnvironment;
         }
         public List<Question> Questions { get; set; }
 

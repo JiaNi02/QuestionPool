@@ -14,12 +14,12 @@ namespace QuestionPool.Pages.answer
     public class CreateModel : PageModel
     {
         private readonly QuestionPool.Models.QuestionPoolDatabaseContext _context;
-        private readonly IWebHostEnvironment _hostingEnvironment;
+        private readonly IFileStorageHelper _fileStorageHelper;
 
-        public CreateModel(QuestionPool.Models.QuestionPoolDatabaseContext context, IWebHostEnvironment hostingEnvironment)
+        public CreateModel(QuestionPool.Models.QuestionPoolDatabaseContext context, IFileStorageHelper fileStorageHelper)
         {
             _context = context;
-            _hostingEnvironment = hostingEnvironment;
+            _fileStorageHelper = fileStorageHelper;
         }
 
         [BindProperty]
@@ -34,16 +34,12 @@ namespace QuestionPool.Pages.answer
         public QuestionAnswer QuestionAnswer { get; set; } = new QuestionAnswer();
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
-        public async Task<IActionResult> OnPostAsync(QuestionAnswer questionAnswer)
+        public async Task<IActionResult> OnPostAsync()
         {
-            if (Image != null)
+            if (Image != null && Image.Length > 0)
             {
-                if (questionAnswer.Image != null)
-                {
-                    string filePath = Path.Combine(_hostingEnvironment.WebRootPath, "uploads", questionAnswer.Image);
-                    System.IO.File.Delete(filePath);
-                }
-                questionAnswer.Image = ProcessUploadFile();
+                var imagePath = await _fileStorageHelper.SaveFileAsync(Image, "answer image");
+                QuestionAnswer.Image = imagePath;
             }
             if (!ModelState.IsValid || QuestionAnswer == null)
             {
@@ -55,23 +51,6 @@ namespace QuestionPool.Pages.answer
             return RedirectToPage("./Index");
 
 
-        }
-        private string ProcessUploadFile()
-        {
-            string uniqueFileName = null;
-
-            if (Image != null)
-            {
-                string uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "uploads");
-                uniqueFileName = Guid.NewGuid().ToString() + "_" + Image.FileName;
-                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    Image.CopyTo(fileStream);
-                }
-            }
-
-            return uniqueFileName;
         }
 
     }

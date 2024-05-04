@@ -26,6 +26,8 @@
     .text-light {
         color: #ffffff; /* 亮色文本的颜色值 */
     }
+
+
 </style>
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User))
@@ -48,15 +50,18 @@
     }
     else
     {
-        <li class="nav-item">
-            <a class="nav-link text-light" id="register" asp-area="Identity" asp-page="/Account/Register">
-                <i class="fas fa-user-plus me-2"></i>Register
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-user-plus me-2"></i>Account
             </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-light" id="login" asp-area="Identity" asp-page="/Account/Login">
-                <i class="fas fa-sign-in-alt me-2"></i>Login
-            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" id="register" asp-area="Identity" asp-page="/Account/Register">
+                    <i class="fas fa-user-plus me-2"></i>Register
+                </a>
+                <a class="dropdown-item" id="login" asp-area="Identity" asp-page="/Account/Login">
+                    <i class="fas fa-sign-in-alt me-2"></i>Login
+                </a>
+            </div>
         </li>
     }
 </ul>

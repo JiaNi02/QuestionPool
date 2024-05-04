@@ -1,0 +1,115 @@
+﻿@page
+@using Microsoft.AspNetCore.Identity
+@model QuestionPool.Pages.ManageRoleModel
+@{
+}
+@inject UserManager<IdentityUser> UserManager
+
+
+<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-Avb2QiuDEEvB4bZJYdft2mNjVShBftLdPG8FJ0V7irTLQ8Uo0qcPxh4Plq7G5tGm0rU+1SPhVotteLpBERwTkw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<!-- Plugins css -->
+<link href="~/assets/libs/flatpickr/flatpickr.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/libs/selectize/css/selectize.bootstrap3.css" rel="stylesheet" type="text/css" />
+
+<!-- Theme Config Js -->
+<script src="~/assets/js/head.js"></script>
+
+<!-- Bootstrap css -->
+<link href="~/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" id="app-style" />
+
+<!-- App css -->
+<link href="~/assets/css/app.min.css" rel="stylesheet" type="text/css" />
+
+<!-- Icons css -->
+<link href="~/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+
+
+
+
+<div class="content">
+
+    <h2 class="title">Manage Roles</h2>
+    <hr />
+
+    <!-- Start Content-->
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        @if (Model.Users != null && Model.Users.Any())
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-centered table-nowrap table-striped" id="products-datatable">
+                                    <thead>
+                                        <tr>
+                                            <th>Employees</th>
+                                            <th>Email</th>
+                                            <th>Roles</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var user in Model.Users)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @{
+                                                        var userDetails = Model.UserDetails.FirstOrDefault(u => u.AspNetUserId == user.Id);
+                                                        if (userDetails != null)
+                                                        {
+                                                            <span>@userDetails.Name</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span>N/A</span>
+                                                        }
+                                                    }
+                                                </td>
+                                                <td>@user.Email</td>
+                                                <td>
+                                                    <form id="roleForm_@user.Id" method="post">
+                                                        <input type="hidden" name="userId" value="@user.Id" />
+                                                        <select name="roles" class="form-control custom-select">
+                                                            @foreach (var role in Model.Roles)
+                                                            {
+                                                                var isSelected = await UserManager.IsInRoleAsync(user, role.Name);
+                                                                <option value="@role.Name" selected="@isSelected">@role.Name</option>
+                                                            }
+                                                        </select>
+                                                    </form>
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn btn-primary" onclick="saveRoles('@user.Id')">Save</button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                    </div> <!-- end card-body-->
+                </div> <!-- end card-->
+            </div> <!-- end col -->
+        </div>
+        <!-- end row -->
+
+    </div> <!-- container -->
+</div><!-- content -->
+
+
+
+
+
+
+<script>
+    function saveRoles(userId) {
+        var form = document.getElementById('roleForm_' + userId);
+        form.submit();
+    }
+
+</script>

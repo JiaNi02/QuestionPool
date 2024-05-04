@@ -3,9 +3,38 @@
 @{
     ViewData["Title"] = "Create";
 }
-<script src="https://cdn.tiny.cloud/1/i0wlzeqbdu2uistzjyp12246lo9qdf1x4uhmy31eh4mrqb8i/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<head>
+    <meta charset="utf-8" />
+    <title>Dashboard 2 | Ubold - Responsive Bootstrap 5 Admin Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+    <meta content="Coderthemes" name="author" />
 
+    <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="~/asset/images/favicon.ico">
 
+    <!-- plugin css -->
+    <link href="~/assets/libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.css" rel="stylesheet" type="text/css" />
+
+    <!-- Theme Config Js -->
+    <script src="~/assets/js/head.js"></script>
+
+    <!-- Bootstrap css -->
+    <link href="~/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" id="app-style" />
+
+    <!-- App css -->
+    <link href="~/assets/css/app.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- Icons css -->
+    <link href="~/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+    <!-- Plugins css-->
+    <link href="~/assets/libs/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/libs/dropzone/min/dropzone.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/libs/quill/quill.core.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/libs/quill/quill.snow.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tiny.cloud/1/i0wlzeqbdu2uistzjyp12246lo9qdf1x4uhmy31eh4mrqb8i/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+</head>
 
     <div class="content">
 
@@ -28,7 +57,6 @@
             </div>
             <!-- end page title -->
             <form method="post" enctype="multipart/form-data">
-                <input hidden asp-for="QuestionAnswer.Image"/>
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
@@ -36,14 +64,14 @@
                                 <!-- Content for the left side -->
                                 <div class="mb-3">
                                     <label asp-for="QuestionAnswer.Answer" class="control-label"></label>
-                                    <input asp-for="QuestionAnswer.Answer" class="form-control" type="text" />
+                                <input asp-for="QuestionAnswer.Answer" class="form-control" id="default" />
                                     <span asp-validation-for="QuestionAnswer.Answer" class="text-danger"></span>
                                 </div>
                                 <div class="mb-3">
                                     <label asp-for="QuestionAnswer.QuestionId" class="control-label"></label>
                                     <select asp-for="QuestionAnswer.QuestionId" class="form-control" asp-items="ViewBag.QuestionId"></select>
                                 </div>
-                                <div id="dropdownSection" class="mb-3">
+@*                                 <div id="dropdownSection" class="mb-3">
                                     <select id="dropdownChoice" class="form-control">
                                         <option value="">Please select an option</option>
                                         <option value="show">Show Answer's Order Field</option>
@@ -54,17 +82,16 @@
                                     <label asp-for="QuestionAnswer.Order" class="control-label"></label>
                                     <input asp-for="QuestionAnswer.Order" class="form-control" />
                                     <span asp-validation-for="QuestionAnswer.Order" class="text-danger"></span>
-                                </div>
+                                </div> *@
                             </div>
 
                             <div class="col-lg-6">
-                                <div class="form-group row">
-                                    <label asp-for="QuestionAnswer.Image" class="control-label"></label>
-                                    <div class="custom-file">
-                                        <input asp-for="QuestionAnswer.Image"  type="file" class="custom-file-input form-control" />
-                                        <label class="custom-file-label">Click here to upload image</label>
-                                    </div>                                    
-                                </div>
+                            <div class="mb-3">
+                                <label for="example-fileinput" class="form-label">Upload File</label>
+                                <input asp-for="QuestionAnswer.Image" class="form-control" type="file" accept="image/*" name="image" id="file" onchange="loadFile(event)">
+                                <span asp-validation-for="QuestionAnswer.Image" class="text-danger"></span>
+                                <p><img id="output" width="150" /></p>
+                            </div>
                             </div>
                         </div>
                     </div>
@@ -72,6 +99,8 @@
                 <!-- end card -->
                 <div class="form-group">
                     <input type="submit" value="Create" class="btn btn-primary" />
+                     <a asp-page="/question/Index" class="btn btn-blue waves-effect waves-light">Back to Question List</a>
+                    <a asp-page="Index" class="btn btn-blue waves-effect waves-light">Back to Asnwer List</a>
                 </div>
             </form>
 
@@ -90,16 +119,23 @@
 
     <!-- Init js-->
     <script src="~/assets/js/pages/form-fileuploads.init.js"></script>
+<script>
+    var loadFile = function (event) {
+        var image = document.getElementById('output');
+        image.src = URL.createObjectURL(event.target.files[0]);
+    };
+    tinymce.init({
+        selector: '#default',
+        branding: false,
+        elementpath: false,
+        plugins: 'autolink  visualblocks visualchars image link media  table charmap pagebreak nonbreaking anchor insertdatetime advlist lists  wordcount  help  charmap linkchecker',
+        toolbar: 'undo redo spellcheckdialog formatpainter | fontfamily fontsize | bold italic underline forecolor backcolor | link image | alignleft aligncenter alignright alignjustify lineheight | checklist bullist numlist indent outdent | removeformat',
+        height: '400px'
+
+    });
+</script>
     @section Scripts {
         @{
-            <script>
-                $(document).ready(function () {
-                    $('.custom-file-input').on("change", function () {
-                        var fileName = $(this).val().split("\\").pop();
-                        $(this).next('.custom-file-label').html(fileName)
-                    })
-                })
-            </script>
             await Html.RenderPartialAsync("_ValidationScriptsPartial");
         }
 

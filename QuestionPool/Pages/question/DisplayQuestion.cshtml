@@ -149,12 +149,12 @@
                 
         <div style="display: flex;justify-content: space-between;margin-top:20px">
             <form id="pdfForm" method="post" asp-page-handler="ExportToPdf" target="_blank">
-                <button id="exportQuestionsToPdf" class="btn btn-dark waves-effect waves-light" style="height:40px"><i class="mdi mdi-file-pdf-box"></i> Export Questions to PDF</button>
+                <button id="exportQuestionsToPdf" class="btn btn-dark waves-effect waves-light" style="height:40px"><i class="mdi mdi-file-pdf-box"></i>Download Questions</button>
                 <input type="hidden" name="questionsHtml" id="questionsHtml" value="">
             </form>
             <form id="pdfFormAnswers" method="post" asp-page-handler="ExportAnswersToPdf" target="_blank">
                 <button id="exportAnswersToPdf" class="btn btn-dark waves-effect waves-light" style="height:40px; width:120px">
-                    <i class="mdi mdi-file-pdf-box"></i> Export Answers
+                    <i class="mdi mdi-file-pdf-box"></i> Download Answers
                 </button>
                 <input type="hidden" name="answersHtml" id="answersHtml" value="">
             </form>

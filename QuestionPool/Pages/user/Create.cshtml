@@ -4,8 +4,77 @@
 @{
     ViewData["Title"] = "Create";
 }
+<head>
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="~/assets/images/favicon.ico">
 
-<h1>Create</h1>
+    <!-- Theme Config Js -->
+    <script src="~/assets/js/head.js"></script>
+    <!-- Bootstrap Tables css -->
+    <link href="~/assets/libs/bootstrap-table/bootstrap-table.min.css" rel="stylesheet" type="text/css" />
+
+
+    <!-- Bootstrap css -->
+    <link href="~/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" id="app-style" />
+
+    <!-- App css -->
+    <link href="~/assets/css/app.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- Icons css -->
+    <link href="~/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+</head>
+<div class="row">
+<div class="col-lg-7">
+    <div class="card">
+        <div class="card-body">
+
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="mb-3">
+                    <label asp-for="UserDetails.AspNetUserId" class="control-label"></label>
+                    <select asp-for="UserDetails.AspNetUserId" class="form-control" asp-items="ViewBag.AspNetUserId"></select>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="UserDetails.Name" class="form-label"></label>
+                    <input asp-for="UserDetails.Name" class="form-control" placeholder="Your FullName" />
+                    <span asp-validation-for="UserDetails.Name" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="UserDetails.DepartmentId" class="control-label"></label>
+                    <select asp-for="UserDetails.DepartmentId" class="form-control" asp-items="ViewBag.DepartmentId"></select>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="UserDetails.Status">Status</label>
+                    <select asp-for="UserDetails.Status" class="form-control mb-3">
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                    </select>
+                    <span asp-validation-for="UserDetails.Status" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn w-sm btn-success waves-effect" style="margin-right:20px">Create</button>
+                    <a asp-page="Index" class="btn btn-blue waves-effect waves-light">Back to List</a>
+                </div>
+
+            </form>
+            @section Scripts {
+                @{
+                    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+                }
+            }
+        </div> <!-- end card-body -->
+    </div> <!-- end card -->
+</div> <!-- end col -->
+</div>
+<!-- Vendor js -->
+<script src="~/assets/js/vendor.min.js"></script>
+
+<!-- Bootstrap Tables js -->
+<script src="~/assets/libs/bootstrap-table/bootstrap-table.min.js"></script>
+
+@* <h1>Create</h1>
 
 <h4>UserDetails</h4>
 <hr />
@@ -44,4 +113,4 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+} *@

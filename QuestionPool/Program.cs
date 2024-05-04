@@ -14,7 +14,18 @@ builder.Services.AddSingleton(builder.Configuration);
 builder.Services.AddDbContext<QuestionPoolDatabaseContext>(option =>
 option.UseSqlServer(builder.Configuration.GetConnectionString("QuestionPooldb")));
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = true;
+
+    // Configure user validation rules
+    options.User = new UserOptions
+    {
+        // Add your customization here
+        AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 -._@+",
+        RequireUniqueEmail = true,
+    };
+})
         .AddRoles<IdentityRole>()
         .AddEntityFrameworkStores<QuestionPoolDatabaseContext>()
         .AddDefaultTokenProviders();

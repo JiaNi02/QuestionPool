@@ -5,9 +5,198 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<head>
+    <meta charset="utf-8" />
 
-<p>
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="~/assets/images/favicon.ico">
+
+    <!-- Theme Config Js -->
+    <script src="~/assets/js/head.js"></script>
+    <!-- Bootstrap Tables css -->
+    <link href="~/assets/libs/bootstrap-table/bootstrap-table.min.css" rel="stylesheet" type="text/css" />
+
+
+    <!-- Bootstrap css -->
+    <link href="~/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" id="app-style" />
+
+    <!-- App css -->
+    <link href="~/assets/css/app.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- Icons css -->
+    <link href="~/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div class="content">
+
+        <!-- Start Content-->
+        <div class="container-fluid">
+
+            <!-- start page title -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box">
+                        <div class="page-title-right">
+                            <ol class="breadcrumb m-0">
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Admin</a></li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Manage Users</a></li>
+                                <li class="breadcrumb-item active">List</li>
+                            </ol>
+                        </div>
+                        <h4 class="page-title">Users List</h4>
+                    </div>
+                </div>
+            </div>
+            <!-- end page title -->
+
+
+          @*   <p>
+                <a asp-page="Create" class="btn btn-primary rounded-pill waves-effect waves-light">Create New</a>
+            </p> *@
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <table data-toggle="table" data-sort-name="id" data-page-list="[5, 10, 20]" data-page-size="5"
+                                   data-buttons-class="xs btn-light" data-pagination="true" data-show-pagination-switch="true"
+                                   class="table-borderless ">
+                                <thead class="table-light">
+                                    <tr>
+                                        @* <th data-field="name" data-sortable="true">
+                                            @Html.DisplayNameFor(model => model.UserDetails[0].AspNetUserId)
+                                        </th> *@
+                                        <th data-field="name" data-sortable="true">
+                                            @Html.DisplayNameFor(model => model.UserDetails[0].Name)
+                                        </th>
+                                        <th th data-field="date" data-sortable="true" data-formatter="dateFormatter">
+                                            @Html.DisplayNameFor(model => model.UserDetails[0].Department)
+                                        </th>
+                                        <th data-field="status" data-sortable="false" data-formatter="statusFormatter">
+                                            @Html.DisplayNameFor(model => model.UserDetails[0].Status)
+                                        </th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.UserDetails)
+                                    {
+                                        <tr>
+                                           @*  <td>@Html.DisplayFor(modelItem => item.AspNetUserId)</td> *@
+                                            <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.Department.Name)</td>
+                                            <td>
+                                                <form id="statusForm_@item.Id" method="post">
+                                                    <input type="hidden" name="userId" value="@item.Id" />
+                                                    <select name="status" class="form-control custom-select">
+                                                        <option value="Active" selected>Active</option>
+                                                        <option value="Inactive">Inactive</option>
+                                                    </select>
+                                                </form>
+                                            </td>
+                                           
+                                            <td>
+                                                <button type="button" class="btn btn-primary" onclick="saveStatus('@item.Id')">Save</button>
+                                                <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-soft-info waves-effect waves-light">Edit</a>
+                                                <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-soft-danger waves-effect waves-light">Delete</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div> <!-- end card-->
+                </div> <!-- end col-->
+            </div>
+            <!-- end row-->
+        </div> <!-- container -->
+
+    </div> <!-- content -->
+    <!-- Vendor js -->
+    <script src="~/assets/js/vendor.min.js"></script>
+
+    <!-- Bootstrap Tables js -->
+    <script src="~/assets/libs/bootstrap-table/bootstrap-table.min.js"></script>
+
+    <!-- Init js -->
+    <script src="~/assets/js/pages/bootstrap-tables.init.js"></script>
+</body>
+
+
+<script>
+    function saveStatus(userId) {
+        var form = document.getElementById('statusForm_' + userId);
+        form.submit();
+    }
+    $(document).ready(function () {
+        // 监听选择状态变化
+        $("select[name='status']").change(function () {
+            // 获取所选的状态和用户ID
+            var status = $(this).val();
+            var userId = $(this).closest("form").data("user-id");
+
+            // 发送 AJAX 请求更新用户状态
+            $.ajax({
+                type: "POST",
+                url: "/user/Index", // 替换成你的页面 URL
+                data: { userId: userId, status: status },
+                success: function (response) {
+                    // 在成功的响应中不需要做任何操作
+                    // 用户状态已经在后端更新了
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    // 在发生错误的情况下处理错误
+                    console.error("发生错误：" + errorThrown);
+                }
+            });
+        });
+    });
+    // function statusFormatter(value, row, index) {
+    //     // Define the colors based on status values
+    //     var colors = {
+    //         'Active': 'text-success',
+    //         'Inactive': 'text-danger'
+    //     };
+
+    //     // Apply the color class based on the status
+    //     var colorClass = colors[value] || '';
+
+    //     return '<span class="' + colorClass + '">' + value + '</span>';
+    // }
+
+    // You can define the dateFormatter function similarly if needed
+</script>
+@section scripts {
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" />
+
+    <script>
+        $(document).ready(function () {
+            // Initialize DataTable
+            $('#dataTable').DataTable(
+                {
+                    searching: true,
+                });
+        });
+
+        function updateStatusColor() {
+            var status = document.getElementById('UserDetails_Status').value;
+            var statusContainer = document.getElementById('statusContainer');
+            if (status === 'Active') {
+                statusContainer.style.backgroundColor = 'green'; // Set background color for active status
+            } else if (status === 'Inactive') {
+                statusContainer.style.backgroundColor = 'red'; // Set background color for inactive status
+            } else {
+                statusContainer.style.backgroundColor = ''; // Reset background color if status is neither active nor inactive
+            }
+        }
+        // Call the function initially to set the initial background color based on the default selected value
+        updateStatusColor();
+
+    </script>
+}
+@* <p>
     <a asp-page="Create">Create New</a>
 </p>
 <table class="table">
@@ -45,4 +234,4 @@
         </tr>
 }
     </tbody>
-</table>
+</table> *@

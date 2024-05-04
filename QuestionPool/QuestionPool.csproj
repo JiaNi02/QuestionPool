@@ -99,6 +99,7 @@
     <Folder Include="wwwroot\assets\libs\waypoints\src\" />
     <Folder Include="wwwroot\assets\libs\waypoints\test\" />
     <Folder Include="wwwroot\lib\webviewer\" />
+    <Folder Include="wwwroot\answer image\" />
     <Folder Include="wwwroot\uploads\" />
   </ItemGroup>
 

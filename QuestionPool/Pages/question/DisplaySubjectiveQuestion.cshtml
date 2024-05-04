@@ -144,7 +144,7 @@
                                             }
                                             <span style="font-weight: bold; color: #333; margin-left: 5px;">@Html.Raw(question.Name)</span>
                                             <br />
-                                            <img src="@question.Image" class="img-fluid">
+                                            <img src="@question.Image" class="img-fluid" asp-append-version="true" style="width:200px">
                                             <div class="question-text" style="margin-left: 40px;">@Html.Raw(question.Questions)</div>
                                         </p>
                                         <div class="question-mark-container" style="display: flex;align-items: center;margin-top:100px;justify-content:end">
@@ -180,12 +180,12 @@
 
         <div style="display: flex;justify-content: space-between;margin-top:20px">
             <form id="pdfForm" method="post" asp-page-handler="ExportToPdf" target="_blank">
-                <button id="exportQuestionsToPdf" class="btn btn-dark waves-effect waves-light" style="height:40px"><i class="mdi mdi-file-pdf-box"></i> Export Questions to PDF</button>
+                <button id="exportQuestionsToPdf" class="btn btn-dark waves-effect waves-light" style="height:40px"><i class="mdi mdi-file-pdf-box"></i> Download Questions</button>
                 <input type="hidden" name="questionsHtml" id="questionsHtml" value="">
             </form>
             <form id="pdfFormAnswers" method="post" asp-page-handler="ExportAnswersToPdf" target="_blank">
                 <button id="exportAnswersToPdf" class="btn btn-dark waves-effect waves-light" style="height:40px">
-                    <i class="mdi mdi-file-pdf-box"></i> Export Answers to PDF
+                    <i class="mdi mdi-file-pdf-box"></i> Download Answers
                 </button>
                 <input type="hidden" name="answersHtml" id="answersHtml" value="">
             </form>

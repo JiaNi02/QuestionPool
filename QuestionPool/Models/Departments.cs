@@ -2,6 +2,7 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace QuestionPool.Models
 {
@@ -13,6 +14,7 @@ namespace QuestionPool.Models
         }
 
         public int Id { get; set; }
+        [Display(Name = "Departments")]
         public string Name { get; set; }
 
         public virtual ICollection<UserDetails> UserDetails { get; set; }

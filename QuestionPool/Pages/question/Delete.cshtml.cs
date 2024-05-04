@@ -28,7 +28,11 @@ namespace QuestionPool.Pages.question
                 return NotFound();
             }
 
-            var question = await _context.Question.FirstOrDefaultAsync(m => m.Id == id);
+            var question = await _context.Question
+                .Include(q => q.ExamType)
+                .Include(q => q.Subject)
+                .Include(q => q.Term)
+                .FirstOrDefaultAsync(m => m.Id == id);
 
             if (question == null)
             {

@@ -35,7 +35,7 @@ namespace QuestionPool.Pages.user
                 return NotFound();
             }
             UserDetails = userdetails;
-           ViewData["DepartmentId"] = new SelectList(_context.Departments, "Id", "Id");
+           ViewData["DepartmentId"] = new SelectList(_context.Departments, "Id", "Name");
             return Page();
         }
 

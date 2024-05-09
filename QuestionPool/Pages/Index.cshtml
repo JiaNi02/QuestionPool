@@ -2,6 +2,12 @@
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
+    string layout = "_Layout";
+    if (User.IsInRole("Admin"))
+    {
+        layout = "_LayoutForAdmin";
+    }
+    Layout = layout;
 }
 <head>
     <!-- App favicon -->
@@ -173,7 +179,7 @@
                         <div class="card">
                             <img src="~/images/dash3.png" class="card-img-top img-fluid" alt="Image 3">
                             <div class="card-body">
-                                <a href="#" class="btn btn-blue btn-sm d-block"><i class="mdi mdi-file-import"></i> Import Questions</a>
+                                <a href="~/question/Questiobank" class="btn btn-blue btn-sm d-block"><i class="mdi mdi-file-import"></i> Export Questions</a>
                             </div>
                         </div>
                     </div>

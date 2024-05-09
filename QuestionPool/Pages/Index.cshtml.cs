@@ -6,6 +6,7 @@ using QuestionPool.Models;
 
 namespace QuestionPool.Pages
 {
+    [Authorize]
     public class IndexModel : PageModel
     {
         private readonly QuestionPoolDatabaseContext _databaseContext;

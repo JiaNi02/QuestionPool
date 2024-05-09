@@ -2,6 +2,12 @@
 @using Microsoft.AspNetCore.Identity
 @model QuestionPool.Pages.ManageRoleModel
 @{
+    string layout = "_Layout";
+    if (User.IsInRole("Admin"))
+    {
+        layout = "_LayoutForAdmin";
+    }
+    Layout = layout;
 }
 @inject UserManager<IdentityUser> UserManager
 

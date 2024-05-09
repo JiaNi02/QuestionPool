@@ -2,6 +2,12 @@
 @using QuestionPool.Models
 @model QuestionPool.Pages.question.DisplaySubjectiveQuestionModel
 @{
+    string layout = "_Layout";
+    if (User.IsInRole("Admin"))
+    {
+        layout = "_LayoutForAdmin";
+    }
+    Layout = layout;
     @functions {
         // Define the function to check if a question contains sub questions
         bool questionContainsSubQuestions(dynamic question)
@@ -144,7 +150,9 @@
                                             }
                                             <span style="font-weight: bold; color: #333; margin-left: 5px;">@Html.Raw(question.Name)</span>
                                             <br />
-                                            <img src="@question.Image" class="img-fluid" asp-append-version="true" style="width:200px">
+                                            <div style="display: flex; justify-content: center;">
+                                                <img src="@question.Image" class="img-fluid" asp-append-version="true" style="width: 250px;">
+                                            </div>
                                             <div class="question-text" style="margin-left: 40px;">@Html.Raw(question.Questions)</div>
                                         </p>
                                         <div class="question-mark-container" style="display: flex;align-items: center;margin-top:100px;justify-content:end">

@@ -63,6 +63,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Data\" />
+    <Folder Include="Models\" />
     <Folder Include="wwwroot\assets\libs\c3\src\" />
     <Folder Include="wwwroot\assets\libs\chartist\scss\settings\" />
     <Folder Include="wwwroot\assets\libs\datatables.net-bs5\types\" />
@@ -98,6 +100,16 @@
     <Folder Include="wwwroot\assets\libs\twitter-bootstrap-wizard\examples\" />
     <Folder Include="wwwroot\assets\libs\waypoints\src\" />
     <Folder Include="wwwroot\assets\libs\waypoints\test\" />
+    <Folder Include="wwwroot\css\" />
+    <Folder Include="wwwroot\images\" />
+    <Folder Include="wwwroot\js\" />
+    <Folder Include="wwwroot\lib\bootstrap\" />
+    <Folder Include="wwwroot\lib\bootstrap\dist\js\" />
+    <Folder Include="wwwroot\lib\jquery-validation-unobtrusive\" />
+    <Folder Include="wwwroot\lib\jquery-validation\" />
+    <Folder Include="wwwroot\lib\jquery-validation\dist\" />
+    <Folder Include="wwwroot\lib\jquery\" />
+    <Folder Include="wwwroot\lib\jquery\dist\" />
     <Folder Include="wwwroot\lib\webviewer\" />
     <Folder Include="wwwroot\answer image\" />
     <Folder Include="wwwroot\uploads\" />

@@ -3,6 +3,12 @@
 
 @{
     ViewData["Title"] = "Index";
+    string layout = "_Layout";
+    if (User.IsInRole("Admin"))
+    {
+        layout = "_LayoutForAdmin";
+    }
+    Layout = layout;
 }
 
 <head>
@@ -50,9 +56,9 @@
             <!-- end page title -->
 
 
-          @*   <p>
-                <a asp-page="Create" class="btn btn-primary rounded-pill waves-effect waves-light">Create New</a>
-            </p> *@
+            <p>
+                <a asp-page="Create" class="btn btn-info waves-effect waves-light">Create New</a>
+            </p>
             <div class="row">
                 <div class="col-sm-12">
                     <div class="card">
@@ -81,7 +87,7 @@
                                     @foreach (var item in Model.UserDetails)
                                     {
                                         <tr>
-                                           @*  <td>@Html.DisplayFor(modelItem => item.AspNetUserId)</td> *@
+                                            @* <td>@Html.DisplayFor(modelItem => item.AspNetUserId)</td> *@
                                             <td>@Html.DisplayFor(modelItem => item.Name)</td>
                                             <td>@Html.DisplayFor(modelItem => item.Department.Name)</td>
                                             <td>

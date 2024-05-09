@@ -1,8 +1,4 @@
-using iText.Kernel.Geom;
-using iText.Kernel.Pdf.Canvas.Draw;
 using iText.Kernel.Pdf;
-using iText.Layout.Element;
-using iText.Layout.Properties;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +12,7 @@ using System.Text;
 using iText.Html2pdf;
 using Newtonsoft.Json.Linq;
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Hosting;
 
 
 namespace QuestionPool.Pages.question
@@ -24,11 +21,13 @@ namespace QuestionPool.Pages.question
     public class DisplayQuestionModel : PageModel
     {
         private readonly QuestionPoolDatabaseContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public DisplayQuestionModel(QuestionPoolDatabaseContext context)
+        public DisplayQuestionModel(QuestionPoolDatabaseContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
             Questions = new List<Question>();
+            _webHostEnvironment = webHostEnvironment;
         }
         public List<Question> Questions { get; set; }
 
@@ -45,7 +44,8 @@ namespace QuestionPool.Pages.question
                 .Where(q => questionIds.Contains(q.Id))
                 .ToListAsync();
 
-            return Page();
+                Questions.Select(q => { q.Image = GetAbsoluteImageUrl(q.Image); return q; }).ToList();
+                return Page();
 
         }
         else
@@ -82,6 +82,7 @@ namespace QuestionPool.Pages.question
                     writer.SetCloseStream(false); // Prevent the writer from closing the stream
                     ConverterProperties props = new ConverterProperties();
                     HtmlConverter.ConvertToPdf(questionsHtml, pdf, props);
+
                 }
             }
 
@@ -112,6 +113,22 @@ namespace QuestionPool.Pages.question
             {
                 FileDownloadName = "ExamAnswers.pdf"
             };
+        }
+        private string GetAbsoluteImageUrl(string relativePath)
+        {
+            if (string.IsNullOrEmpty(relativePath))
+            {
+                return string.Empty; // ??????????????? URL
+            }
+
+            string webRootPath = _webHostEnvironment.WebRootPath;
+            string absolutePath = Path.Combine(webRootPath, "uploads", relativePath);
+            string baseUrl = $"{Request.Scheme}://{Request.Host}";
+
+            // Construct the absolute URL
+            string absoluteUrl = $"{baseUrl}/{relativePath}";
+
+            return absoluteUrl;
         }
 
     }

@@ -4,6 +4,12 @@
 @using System.Text.Json.Serialization
 @model QuestionPool.Pages.question.DisplayQuestionModel
 @{
+    string layout = "_Layout";
+    if (User.IsInRole("Admin"))
+    {
+        layout = "_LayoutForAdmin";
+    }
+    Layout = layout;
 }
 <head>
     <!-- plugin css -->
@@ -107,6 +113,9 @@
                                             <span class="question-number">@question.QuestionNumber.</span>
                                             <span style="font-weight: bold; color: #333;">@Html.Raw(question.Name)</span>
                                             <br />
+                                            <div style="display: flex; justify-content: center;">
+                                                <img src="@question.Image" class="img-fluid" asp-append-version="true" style="width: 250px;">
+                                            </div>
                                             <div class="question-text" style="margin-left: 40px;">@Html.Raw(question.Questions)</div>
                                         </p>
                                         <ul class="answer-choices">

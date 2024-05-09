@@ -1,6 +1,12 @@
 ﻿@page
 @model QuestionPool.Pages.subject.Choose_SubjectModel
 @{
+    string layout = "_Layout";
+    if (User.IsInRole("Admin"))
+    {
+        layout = "_LayoutForAdmin";
+    }
+    Layout = layout;
 }
 <div class="content">
 

@@ -26,10 +26,15 @@ namespace QuestionPool.Pages.answer
         public IFormFile Image { get; set; }
         public IActionResult OnGet()
         {
-            ViewData["QuestionId"] = new SelectList(_context.Question, "Id", "Name");
+            ViewData["QuestionId"] = _context.Question.Select(q => new SelectListItem
+            {
+                Value = q.Id.ToString(),
+                Text = $"{q.Name} - {q.Questions}" // 将问题的名称和内容合并成一个字符串
+            }).ToList();
+
             return Page();
         }
-
+        //ViewData["QuestionId"] = new SelectList(_context.Question, "Id", "Name");
         [BindProperty]
         public QuestionAnswer QuestionAnswer { get; set; } = new QuestionAnswer();
 
@@ -41,10 +46,10 @@ namespace QuestionPool.Pages.answer
                 var imagePath = await _fileStorageHelper.SaveFileAsync(Image, "answer image");
                 QuestionAnswer.Image = imagePath;
             }
-            if (!ModelState.IsValid || QuestionAnswer == null)
-            {
-                return Page();
-            }
+            //if (!ModelState.IsValid || QuestionAnswer == null)
+            //{
+            //    return Page();
+            //}
             _context.QuestionAnswer.Add(QuestionAnswer);
             await _context.SaveChangesAsync();
 

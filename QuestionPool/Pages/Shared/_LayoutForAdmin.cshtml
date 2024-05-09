@@ -1,4 +1,5 @@
 ﻿<!DOCTYPE html>
+
 <html lang="en" data-topbar-color="dark">
 <head>
     <meta charset="utf-8" />
@@ -58,12 +59,11 @@
                     <li class="menu-title">Navigation</li>
 
                     <li class="menu-item">
-                        <a href="~/Pages/Index" class="menu-link">
+                        <a href="/Index" data-bs-toggle="collapse" class="menu-link">
                             <span class="menu-icon"><i data-feather="airplay"></i></span>
                             <span class="menu-text"> Dashboards </span>
                         </a>
                     </li>
-
 
                     <li class="menu-title">Teachers</li>
 
@@ -91,12 +91,17 @@
                                         <span class="menu-text">Create Question</span>
                                     </a>
                                 </li>
+                                @*   <li class="menu-item">
+                                <a href="~/question/upload file" class="menu-link">
+                                <span class="menu-text">Upload file</span>
+                                </a>
+                                </li> *@
                             </ul>
                         </div>
                     </li>
 
 
-@*                     <li class="menu-title">Admin</li>
+                    <li class="menu-title">Admin</li>
 
                     <li class="menu-item">
                         <a href="#menuCrm" data-bs-toggle="collapse" class="menu-link">
@@ -111,14 +116,14 @@
                                         <span class="menu-text">Manage Role</span>
                                     </a>
                                 </li>
-                                 <li class="menu-item">
+                                <li class="menu-item">
                                     <a href="~/user/Index" class="menu-link">
                                         <span class="menu-text">User List</span>
                                     </a>
                                 </li>
                             </ul>
                         </div>
-                    </li> *@
+                    </li>
 
                 </ul>
                 <!--- End Menu -->
@@ -174,7 +179,7 @@
                             </div>
                         </li>
 
-                        <li><partial name="_LoginPartial" /></li>                     
+                        <li><partial name="_LoginPartial" /></li>
 
                     </ul>
                 </div>
@@ -224,46 +229,3 @@
 </body>
 
 </html>
-@* <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">QuestionPool</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/subject/Index">subject</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <partial name="_LoginPartial" />
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - QuestionPool - <a asp-area="" asp-page="/Privacy">Privacy</a>
-        </div>
-    </footer>
-
-     <script src="~/lib/webviewer/webviewer.min.js"></script>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-
-    @await RenderSectionAsync("Scripts", required: false)
-</body>
-</html> *@

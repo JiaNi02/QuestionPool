@@ -3,6 +3,12 @@
 
 @{
     ViewData["Title"] = "Index";
+    string layout = "_Layout";
+    if (User.IsInRole("Admin"))
+    {
+        layout = "_LayoutForAdmin";
+    }
+    Layout = layout;
 }
 <head>
     <meta charset="utf-8" />
@@ -111,7 +117,7 @@
                                                     <ul>
                                                         @foreach (var answer in item.QuestionAnswer)
                                                         {
-                                                            <li>@answer.Answer</li>
+                                                            @Html.Raw($"<li>{answer.Answer}</li>")
                                                         }
                                                     </ul>
                                                 }

@@ -32,6 +32,8 @@ namespace QuestionPool.Pages.question
                     .Where(q => questionIds.Contains(q.Id))
                     .ToListAsync();
 
+                Questions.Select(q => { q.Image = GetAbsoluteImageUrl(q.Image); return q; }).ToList();
+
                 return Page();
 
             }
@@ -42,7 +44,6 @@ namespace QuestionPool.Pages.question
             }
 
         }
-
         public void ConvertHtmlToPdf(string htmlContent, string pdfFilePath)
         {
             using (var writer = new PdfWriter(pdfFilePath))
@@ -99,6 +100,22 @@ namespace QuestionPool.Pages.question
             {
                 FileDownloadName = "ExamAnswers.pdf"
             };
+        }
+        private string GetAbsoluteImageUrl(string relativePath)
+        {
+            if (string.IsNullOrEmpty(relativePath))
+            {
+                return string.Empty; // ??????????????? URL
+            }
+
+            string webRootPath = _webHostEnvironment.WebRootPath;
+            string absolutePath = Path.Combine(webRootPath, "uploads", relativePath);
+            string baseUrl = $"{Request.Scheme}://{Request.Host}";
+
+            // Construct the absolute URL
+            string absoluteUrl = $"{baseUrl}/{relativePath}";
+
+            return absoluteUrl;
         }
 
     }

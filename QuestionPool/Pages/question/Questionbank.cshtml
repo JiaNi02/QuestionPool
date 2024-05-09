@@ -1,6 +1,12 @@
 ﻿@page
 @model QuestionPool.Pages.question.QuestionbankModel
 @{
+    string layout = "_Layout";
+    if (User.IsInRole("Admin"))
+    {
+        layout = "_LayoutForAdmin";
+    }
+    Layout = layout;
 }
 <head>
 
@@ -22,6 +28,10 @@
 
     <!-- Icons css -->
     <link href="~/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+    <script src="https://kendo.cdn.telerik.com/2023.2.606/js/kendo.all.min.js"></script>
 <style>
         #dataModal {
             display: none; 
@@ -55,9 +65,10 @@
             <div class="card">
                 <div class="card-body">
                         <form id="sortingForm" method="post" asp-page-handler="Submit">
+                          <button type="button" id="demo-delete-row" class="btn btn-danger btn-sm" disabled><i class="mdi mdi-close me-1"></i>Delete</button>
                           <table id="demo-custom-toolbar" class="table-border" data-toggle="table" data-toolbar="#demo-delete-row" data-search="true"
-                           data-show-refresh="true" data-show-columns="true" data-sort-name="id" data-page-list="[5, 10, 20]"
-                           data-page-size="5" data-pagination="true" data-show-pagination-switch="true">
+                           data-show-refresh="true" data-show-columns="true" data-sort-name="id" data-page-list="[10, 20, 30]"
+                           data-page-size="10" data-pagination="true" data-show-pagination-switch="true">
                         <thead class="table-light">
                             <tr>
 
@@ -122,7 +133,29 @@
 
 </body>
 <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // 获取删除按钮元素
+        var deleteButton = document.getElementById("demo-delete-row");
 
+        // 添加点击事件监听器
+        deleteButton.addEventListener("click", function () {
+            // 弹出警告框
+            var confirmation = confirm("Are you sure you want to delete this row?");
+
+            // 如果用户点击了确认按钮
+            if (confirmation) {
+                // 获取所有选中的复选框
+                var selectedCheckboxes = document.querySelectorAll(".selectedQuestion:checked");
+
+                // 遍历选中的复选框
+                selectedCheckboxes.forEach(function (checkbox) {
+                    // 获取复选框所在的行并将其删除
+                    var row = checkbox.closest("tr");
+                    row.remove();
+                });
+            }
+        });
+    });
     document.addEventListener("DOMContentLoaded", function () {
         var selectedQuestions = JSON.parse(localStorage.getItem("selectedQuestions")) || {};
 
@@ -153,7 +186,8 @@
             });
         });
     });
- 
+
+   
 
     document.getElementById('submitButton').addEventListener('click', function () {
         var selectedData = [];

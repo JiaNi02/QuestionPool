@@ -172,7 +172,7 @@
                                             <ul style="padding-left: 40px; margin: 0;">
                                                 @foreach (var answer in question.QuestionAnswer)
                                                 {
-                                                    <li>@answer.Answer</li>
+                                                    @Html.Raw($"<li>{answer.Answer}</li>")
 
                                                 }
                                             </ul>

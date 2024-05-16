@@ -1,5 +1,10 @@
 using iText.Html2pdf;
+using iText.Kernel.Font;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
+using iText.Layout;
+using iText.Layout.Element;
+using iText.Layout.Properties;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -70,6 +75,7 @@ namespace QuestionPool.Pages.question
                     writer.SetCloseStream(false); // Prevent the writer from closing the stream
                     ConverterProperties props = new ConverterProperties();
                     HtmlConverter.ConvertToPdf(questionsHtml, pdf, props);
+
                 }
             }
 
@@ -80,6 +86,7 @@ namespace QuestionPool.Pages.question
                 FileDownloadName = "ExamPaper.pdf"
             };
         }
+
         public FileStreamResult OnPostExportAnswersToPdfAsync(string answersHtml)
         {
             var stream = new MemoryStream();

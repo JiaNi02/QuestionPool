@@ -61,7 +61,7 @@
                                     <div class="input-group input-group-merge">
                                         <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="Enter your password" />
                                         <div class="input-group-text" data-password-toggle="true">
-                                            <span class="password-eye"></span>
+                                            <span class="password-eye" onclick="togglePasswordVisibility()"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -107,18 +107,20 @@
         <partial name="_ValidationScriptsPartial" />
     }
     <script>
-        $(document).ready(function () {
-            // Toggle password visibility
-            $('[data-password-toggle]').on('click', function () {
-                var passwordInput = $(this).closest('.input-group').find('input');
+        function togglePasswordVisibility() {
+            var passwordInput = document.querySelector('input[name="Input.Password"]');
+            var passwordEye = document.querySelector('.password-eye');
 
-                if (passwordInput.attr('type') === 'password') {
-                    passwordInput.attr('type', 'text');
-                } else {
-                    passwordInput.attr('type', 'password');
-                }
-            });
-        });
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                // 如果要切换图标，可以在这里添加相关代码
+                passwordEye.classList.add('text-primary'); // 举例：改变眼睛图标的颜色
+            } else {
+                passwordInput.type = "password";
+                // 如果要切换图标，可以在这里添加相关代码
+                passwordEye.classList.remove('text-primary'); // 举例：恢复眼睛图标的颜色
+            }
+        }
     </script>
 
 </body>

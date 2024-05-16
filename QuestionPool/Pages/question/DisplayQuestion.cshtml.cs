@@ -13,6 +13,8 @@ using iText.Html2pdf;
 using Newtonsoft.Json.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Hosting;
+using iText.Layout.Element;
+using iText.Layout.Properties;
 
 
 namespace QuestionPool.Pages.question

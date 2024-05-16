@@ -16,7 +16,7 @@ option.UseSqlServer(builder.Configuration.GetConnectionString("QuestionPooldb"))
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 {
-    options.SignIn.RequireConfirmedAccount = true;
+    options.SignIn.RequireConfirmedAccount = false;
 
     // Configure user validation rules
     options.User = new UserOptions

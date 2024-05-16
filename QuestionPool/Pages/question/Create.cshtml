@@ -92,13 +92,13 @@
                                 <span asp-validation-for="Question.Mark" class="text-danger"></span>
                             </div>
                                 <div class="mb-3">
-                                    <label for="example-fileinput" class="form-label">Upload File</label>
+                                    <label for="example-fileinput" class="form-label">Upload Image</label>
                                     <input asp-for="Question.Image" class="form-control" type="file" accept="image/*" name="image" id="file" onchange="loadFile(event)">
                                     <span asp-validation-for="Question.Image" class="text-danger"></span>
                                     <p><img id="output" width="150" /></p>
                                 </div>
                                 <div class="mb-3">
-                                    <label asp-for="Question.ExamTypeId" class="control-label"></label>
+                                    <label asp-for="Question.ExamTypeId" class="control-label">Exam Type</label>
                                     <select asp-for="Question.ExamTypeId" class="form-control" asp-items="ViewBag.ExamTypeId"></select>
                                 </div>
 

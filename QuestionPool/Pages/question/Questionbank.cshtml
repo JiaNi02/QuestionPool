@@ -65,7 +65,7 @@
             <div class="card">
                 <div class="card-body">
                         <form id="sortingForm" method="post" asp-page-handler="Submit">
-                          <button type="button" id="demo-delete-row" class="btn btn-danger btn-sm" disabled><i class="mdi mdi-close me-1"></i>Delete</button>
+                         @*  <button type="button" id="demo-delete-row" class="btn btn-danger btn-sm" disabled><i class="mdi mdi-close me-1"></i>Delete</button> *@
                           <table id="demo-custom-toolbar" class="table-border" data-toggle="table" data-toolbar="#demo-delete-row" data-search="true"
                            data-show-refresh="true" data-show-columns="true" data-sort-name="id" data-page-list="[10, 20, 30]"
                            data-page-size="10" data-pagination="true" data-show-pagination-switch="true">
@@ -100,7 +100,7 @@
                                                     <ul>
                                                         @foreach (var answer in item.QuestionAnswer)
                                                         {
-                                                            <li>@answer.Answer</li>
+                                                                @Html.Raw($"<li>{answer.Answer}</li>")
                                                         }
                                                     </ul>
                                                 }

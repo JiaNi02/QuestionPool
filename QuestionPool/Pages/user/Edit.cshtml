@@ -3,6 +3,12 @@
 
 @{
     ViewData["Title"] = "Edit";
+    string layout = "_Layout";
+    if (User.IsInRole("Admin"))
+    {
+        layout = "_LayoutForAdmin";
+    }
+    Layout = layout;
 }
 <head>
     <meta charset="utf-8" />

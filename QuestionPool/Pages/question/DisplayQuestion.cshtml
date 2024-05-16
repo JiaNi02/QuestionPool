@@ -142,7 +142,7 @@
                                             <ul style="padding-left: 40px; margin: 0;">
                                                 @foreach (var answer in question.QuestionAnswer)
                                                 {
-                                                    <li>@answer.Answer</li>
+                                                    @Html.Raw($"<li>{answer.Answer}</li>")
 
                                                 }
                                             </ul>
@@ -162,7 +162,7 @@
                 <input type="hidden" name="questionsHtml" id="questionsHtml" value="">
             </form>
             <form id="pdfFormAnswers" method="post" asp-page-handler="ExportAnswersToPdf" target="_blank">
-                <button id="exportAnswersToPdf" class="btn btn-dark waves-effect waves-light" style="height:40px; width:120px">
+                <button id="exportAnswersToPdf" class="btn btn-dark waves-effect waves-light" style="height:40px;">
                     <i class="mdi mdi-file-pdf-box"></i> Download Answers
                 </button>
                 <input type="hidden" name="answersHtml" id="answersHtml" value="">
